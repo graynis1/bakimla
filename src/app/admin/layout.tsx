@@ -27,7 +27,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <Header />
       <main style={{ maxWidth: 1300, margin: '0 auto', padding: '32px 20px' }}>
-        <div className="bk-panel-layout" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24 }}>
+        <div className="bk-panel-layout" style={{ display: 'grid', gap: 24 }}>
           <div className="bk-panel-sidebar" style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 20, height: 'fit-content', position: 'sticky', top: 90 }}>
             <div style={{ marginBottom: 12, paddingBottom: 14, borderBottom: '1px solid var(--line)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

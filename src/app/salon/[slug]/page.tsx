@@ -148,7 +148,7 @@ export default function BusinessProfilePage() {
       <main style={{ maxWidth: 1320, margin: '0 auto', padding: '0 20px 48px' }}>
         {/* Gallery */}
         {business.gallery?.length > 0 ? (
-          <div className="bk-gallery-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gridTemplateRows: '200px 200px', gap: 8, borderRadius: 20, overflow: 'hidden', marginBottom: 24 }}>
+          <div className="bk-gallery-grid" style={{ display: 'grid', gap: 8, borderRadius: 20, overflow: 'hidden', marginBottom: 24 }}>
             {business.gallery.slice(0, 5).map((img: any, i: number) => (
               <div key={img.id} style={{ gridRow: i === 0 ? 'span 2' : 'auto', background: `url(${img.url}) center/cover`, backgroundColor: 'var(--surface-2)', position: 'relative' }}>
                 {i === 4 && business.gallery.length > 5 && (
@@ -165,7 +165,7 @@ export default function BusinessProfilePage() {
           <div style={{ height: 220, background: 'linear-gradient(135deg, #f1ede6 0%, #e8e2d8 100%)', borderRadius: 20, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 56 }}>✂️</div>
         )}
 
-        <div className="bk-salon-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 24 }}>
+        <div className="bk-salon-layout" style={{ display: 'grid', gap: 24 }}>
           {/* Left */}
           <div>
             {/* Header card with tabs */}
