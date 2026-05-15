@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import BusinessCard from '@/components/shared/BusinessCard'

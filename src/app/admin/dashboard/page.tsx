@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { Store, Users, CreditCard, AlertCircle, CalendarDays, Clock } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'
 import { format } from 'date-fns'

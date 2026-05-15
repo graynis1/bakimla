@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { formatPrice } from '@/lib/utils'

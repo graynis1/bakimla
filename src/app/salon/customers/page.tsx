@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import { formatPrice } from '@/lib/utils'

@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react'

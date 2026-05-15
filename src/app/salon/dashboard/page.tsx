@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+
+export const dynamic = 'force-dynamic'
 import { isSubscriptionActive } from '@/lib/subscription'
 import { formatPrice } from '@/lib/utils'
 import Link from 'next/link'

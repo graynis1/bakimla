@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { format } from 'date-fns'
+
+export const dynamic = 'force-dynamic'
 import { tr } from 'date-fns/locale'
 import { formatPrice } from '@/lib/utils'
 import { isSubscriptionActive } from '@/lib/subscription'
