@@ -112,7 +112,7 @@ export default function Header() {
       top: 0,
       zIndex: 100,
     }}>
-      <div style={{
+      <div className="bk-header-inner" style={{
         maxWidth: 1320,
         margin: '0 auto',
         padding: '0 24px',
@@ -125,7 +125,7 @@ export default function Header() {
 
         {/* ── Logo ── */}
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-          <Image src="/logo.png" alt="Bakımla" width={200} height={54} style={{ objectFit: 'contain', height: 40, width: 'auto' }} priority />
+          <Image src="/logo.png" alt="Bakımla" width={200} height={54} className="bk-header-logo" style={{ objectFit: 'contain', height: 40, width: 'auto' }} priority />
         </Link>
 
         {/* ── Center Nav (desktop) ── */}
@@ -175,7 +175,7 @@ export default function Header() {
               <Link href="/auth/login" className="bk-desktop-nav" style={{ padding: '0 14px', height: 38, borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: 'var(--text)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 Giriş Yap
               </Link>
-              <Link href="/auth/register" className="bk-desktop-nav" style={{ padding: '0 16px', height: 38, borderRadius: 10, fontSize: 13.5, fontWeight: 700, color: 'white', textDecoration: 'none', background: 'var(--brand)', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+              <Link href="/auth/register" className="bk-register-btn" style={{ padding: '0 16px', height: 38, borderRadius: 10, fontSize: 13.5, fontWeight: 700, color: 'white', textDecoration: 'none', background: 'var(--brand)', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
                 Kayıt Ol
               </Link>
             </>

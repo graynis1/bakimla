@@ -10,7 +10,7 @@ export default function Footer() {
             <div style={{ marginBottom: 16, display: 'inline-block', background: 'white', borderRadius: 12, padding: '8px 16px' }}>
               <Image src="/logo.png" alt="Bakımla" width={200} height={54} style={{ objectFit: 'contain', height: 36, width: 'auto', display: 'block' }} />
             </div>
-            <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(255,255,255,0.65)', maxWidth: 280, marginBottom: 16 }}>
+            <p style={{ fontSize: 14, lineHeight: 1.7, color: 'rgba(255,255,255,0.65)', maxWidth: '100%', marginBottom: 16 }}>
               Türkiye&apos;nin kişisel bakım randevu platformu. Berber, güzellik salonu, spa ve daha fazlası.
             </p>
             <div style={{ display: 'flex', gap: 10 }}>
