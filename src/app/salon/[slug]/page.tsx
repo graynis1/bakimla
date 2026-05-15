@@ -132,7 +132,7 @@ export default function BusinessProfilePage() {
   ]
 
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh', overflowX: 'hidden', maxWidth: '100vw' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <Header />
 
       {/* Breadcrumb */}
@@ -305,9 +305,9 @@ export default function BusinessProfilePage() {
                     </div>
                     {business.reviews.slice(0, 3).map((r: any) => (
                       <div key={r.id} style={{ borderBottom: '1px solid var(--line)', paddingBottom: 14, marginBottom: 14 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <span style={{ fontWeight: 700, fontSize: 14 }}>{r.customer.name} {r.customer.surname}</span>
-                          <span style={{ color: '#d69b22', fontWeight: 700 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, marginBottom: 6 }}>
+                          <span style={{ fontWeight: 700, fontSize: 14, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.customer.name} {r.customer.surname}</span>
+                          <span style={{ color: '#d69b22', fontWeight: 700, flexShrink: 0, whiteSpace: 'nowrap' }}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</span>
                         </div>
                         {r.comment && <p style={{ fontSize: 13, color: 'var(--muted-color)', lineHeight: 1.6, margin: 0 }}>{r.comment}</p>}
                       </div>
@@ -365,14 +365,14 @@ export default function BusinessProfilePage() {
                         {emp.services?.length > 0 && (
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
                             {emp.services.slice(0, 4).map((es: any) => (
-                              <span key={es.id} style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', background: 'var(--surface-2)', borderRadius: 6, color: 'var(--muted-color)' }}>
+                              <span key={es.id} style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', background: 'var(--surface-2)', borderRadius: 6, color: 'var(--muted-color)', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {es.service?.name}
                               </span>
                             ))}
                           </div>
                         )}
                       </div>
-                      <div style={{ display: 'flex', gap: 2 }}>
+                      <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
                         {[1,2,3,4,5].map(s => <Star key={s} size={12} fill="#d69b22" color="#d69b22" />)}
                       </div>
                     </div>
@@ -532,9 +532,9 @@ export default function BusinessProfilePage() {
                   const h = wh[key]
                   const isToday = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()] === key
                   return (
-                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: isToday ? 700 : 400 }}>
-                      <span style={{ color: isToday ? 'var(--brand)' : 'var(--text)' }}>{name}{isToday ? ' (bugün)' : ''}</span>
-                      <span style={{ color: h?.isOpen ? 'var(--green)' : '#b42318' }}>
+                    <div key={key} style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 13, fontWeight: isToday ? 700 : 400 }}>
+                      <span style={{ color: isToday ? 'var(--brand)' : 'var(--text)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}{isToday ? ' (bugün)' : ''}</span>
+                      <span style={{ color: h?.isOpen ? 'var(--green)' : '#b42318', flexShrink: 0, whiteSpace: 'nowrap' }}>
                         {h?.isOpen ? `${h.open} - ${h.close}` : 'Kapalı'}
                       </span>
                     </div>
@@ -550,9 +550,9 @@ export default function BusinessProfilePage() {
                   <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Scissors size={22} color="white" />
                   </div>
-                  <div>
-                    <div style={{ fontWeight: 800, fontSize: 14, lineHeight: 1.35 }}>Profesyonel bakım, mükemmel stil.</div>
-                    <p style={{ fontSize: 13, color: 'var(--muted-color)', lineHeight: 1.5, margin: '4px 0 0' }}>Size en uygun hizmeti seçin, randevunuzu hemen oluşturun.</p>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 800, fontSize: 14, lineHeight: 1.35, wordBreak: 'break-word' }}>Profesyonel bakım, mükemmel stil.</div>
+                    <p style={{ fontSize: 13, color: 'var(--muted-color)', lineHeight: 1.5, margin: '4px 0 0', wordBreak: 'break-word' }}>Size en uygun hizmeti seçin, randevunuzu hemen oluşturun.</p>
                   </div>
                 </div>
                 <Link href={`/booking?businessId=${business.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 46, borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>

@@ -101,7 +101,7 @@
 }
 
 /* ── Base ──────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
@@ -110,7 +110,6 @@ body {
   padding-bottom: var(--bottom-nav-h);
   overflow-x: hidden;
   width: 100%;
-  max-width: 100vw;
 }
 
 @layer base {
@@ -432,8 +431,11 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /* Prevent service rows from overflowing their card */
 .bk-pub-svc-row { max-width: 100%; box-sizing: border-box; }
 
-/* Tab bar: hide scrollbar on WebKit */
-.bk-tab-scroll::-webkit-scrollbar { display: none; }
+/* Ensure every element on the salon page stays within its container */
+.bk-salon-main, .bk-salon-main * { box-sizing: border-box; }
+.bk-salon-main img,
+.bk-salon-main iframe,
+.bk-salon-main video { max-width: 100%; }
 
 @media (max-width: 960px) {
   .bk-salon-layout  { grid-template-columns: 1fr !important; }
