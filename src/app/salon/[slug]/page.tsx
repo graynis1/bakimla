@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { categoryLabels, formatPrice } from '@/lib/utils'
-import { MapPin, Phone, Star, Heart, Globe, ExternalLink, CheckCircle2, ChevronRight, Mail, Clock } from 'lucide-react'
+import { MapPin, Phone, Star, Heart, CheckCircle2, ChevronRight, Mail, CalendarDays, Home, LayoutGrid, User, Users, MessageCircle, Camera, Scissors } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useSession } from 'next-auth/react'
@@ -123,11 +123,11 @@ export default function BusinessProfilePage() {
   const mapQuery = encodeURIComponent(`${business.address}, ${business.district}, ${business.city}`)
 
   const TABS = [
-    { key: 'overview', label: 'Genel Bakış' },
-    { key: 'services', label: `Hizmetler (${business.services?.length ?? 0})` },
-    { key: 'employees', label: `Çalışanlar (${business.employees?.length ?? 0})` },
-    { key: 'reviews', label: `Yorumlar (${business.reviewCount})` },
-    { key: 'photos', label: `Fotoğraflar (${business.gallery?.length ?? 0})` },
+    { key: 'overview',   label: 'Genel Bakış',                                    icon: Home },
+    { key: 'services',   label: `Hizmetler (${business.services?.length ?? 0})`,  icon: LayoutGrid },
+    { key: 'employees',  label: `Çalışanlar (${business.employees?.length ?? 0})`,icon: Users },
+    { key: 'reviews',    label: `Yorumlar (${business.reviewCount})`,             icon: MessageCircle },
+    { key: 'photos',     label: `Fotoğraflar (${business.gallery?.length ?? 0})`, icon: Camera },
   ]
 
   return (
@@ -205,43 +205,27 @@ export default function BusinessProfilePage() {
               </div>
 
               {/* Tabs */}
-              <div style={{ display: 'flex', borderTop: '1px solid var(--line)', overflowX: 'auto' }}>
-                {TABS.map(t => (
-                  <button
-                    key={t.key}
-                    onClick={() => setTab(t.key)}
-                    style={{
-                      padding: '13px 20px', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap',
-                      color: tab === t.key ? 'var(--brand)' : 'var(--muted-color)',
-                      background: 'none', border: 'none', borderBottom: `2px solid ${tab === t.key ? 'var(--brand)' : 'transparent'}`,
-                      cursor: 'pointer', transition: 'all 0.15s',
-                    }}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile-only quick-action strip */}
-            <div className="bk-mobile-contact">
-              <a href={`tel:${business.phone}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 8px', borderRadius: 14, background: '#f0fdf4', textDecoration: 'none' }}>
-                <Phone size={22} color="#15803d" />
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#15803d' }}>Ara</span>
-              </a>
-              {business.whatsapp ? (
-                <a href={`https://wa.me/90${business.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 8px', borderRadius: 14, background: '#f0fdf4', textDecoration: 'none' }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#25D366' }}>WhatsApp</span>
-                </a>
-              ) : null}
-              <a href={`https://maps.google.com/maps?q=${mapQuery}`} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 8px', borderRadius: 14, background: 'var(--surface-2)', textDecoration: 'none' }}>
-                <MapPin size={22} color="var(--brand)" />
-                <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--brand)' }}>Yol Tarifi</span>
-              </a>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '12px 8px', borderRadius: 14, background: openNow ? '#f0fdf4' : '#fef2f2' }}>
-                <Clock size={22} color={openNow ? '#15803d' : '#b42318'} />
-                <span style={{ fontSize: 11, fontWeight: 700, color: openNow ? '#15803d' : '#b42318' }}>{openNow ? 'Açık' : 'Kapalı'}</span>
+              <div style={{ display: 'flex', borderTop: '1px solid var(--line)', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                {TABS.map(t => {
+                  const Icon = t.icon
+                  return (
+                    <button
+                      key={t.key}
+                      onClick={() => setTab(t.key)}
+                      className="bk-tab-btn"
+                      style={{
+                        padding: '13px 16px', fontSize: 12, fontWeight: 700, whiteSpace: 'nowrap',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                        color: tab === t.key ? 'var(--brand)' : 'var(--muted-color)',
+                        background: 'none', border: 'none', borderBottom: `2px solid ${tab === t.key ? 'var(--brand)' : 'transparent'}`,
+                        cursor: 'pointer', transition: 'all 0.15s', flex: 1,
+                      }}
+                    >
+                      <span className="bk-tab-icon" style={{ display: 'none' }}><Icon size={18} /></span>
+                      <span className="bk-tab-label">{t.label}</span>
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
@@ -266,16 +250,29 @@ export default function BusinessProfilePage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {business.services.slice(0, 3).map((s: any) => (
                         <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 12 }}>
-                          <div>
-                            <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
-                            <div style={{ fontSize: 12, color: 'var(--muted-color)', marginTop: 2 }}>⏱ {s.duration} dk</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <User size={18} color="var(--muted-color)" />
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
+                              <div style={{ fontSize: 12, color: 'var(--muted-color)', marginTop: 2 }}>{s.duration} dk</div>
+                            </div>
                           </div>
-                          <div style={{ fontWeight: 800, color: 'var(--brand)' }}>{formatPrice(s.price)}</div>
+                          <div style={{ fontWeight: 800, color: 'var(--brand)', flexShrink: 0 }}>{formatPrice(s.price)}</div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
+                {/* Inline booking CTA */}
+                {canBook && (
+                  <Link href={`/booking?businessId=${business.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, height: 52, borderRadius: 14, background: 'var(--brand)', color: 'white', fontWeight: 800, fontSize: 15, textDecoration: 'none', marginBottom: 20 }}>
+                    <CalendarDays size={18} />
+                    Randevu Oluştur
+                  </Link>
+                )}
+
                 {/* Top employees preview */}
                 {business.employees?.length > 0 && (
                   <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24, marginBottom: 20 }}>
@@ -285,8 +282,8 @@ export default function BusinessProfilePage() {
                     </div>
                     <div className="bk-emp-preview-grid" style={{ display: 'grid', gap: 10 }}>
                       {business.employees.slice(0, 4).map((emp: any) => (
-                        <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 14 }}>
-                          <div style={{ width: 42, height: 42, borderRadius: '50%', background: `url(${emp.photo}) center/cover`, backgroundColor: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--brand)', fontSize: 16, flexShrink: 0 }}>
+                        <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 14 }}>
+                          <div style={{ width: 42, height: 42, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 16, flexShrink: 0 }}>
                             {!emp.photo && emp.name[0]}
                           </div>
                           <div>
@@ -326,13 +323,18 @@ export default function BusinessProfilePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {business.services?.map((s: any) => (
                     <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16, border: '1px solid var(--line)', borderRadius: 14 }}>
-                      <div>
-                        <div style={{ fontWeight: 600 }}>{s.name}</div>
-                        {s.description && <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2 }}>{s.description}</div>}
-                        <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 4 }}>⏱ {s.duration} dk</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <User size={20} color="var(--muted-color)" />
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{s.name}</div>
+                          {s.description && <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2 }}>{s.description}</div>}
+                          <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 4 }}>{s.duration} dk</div>
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-                        <div style={{ fontWeight: 800, color: 'var(--brand)', fontSize: 18 }}>{formatPrice(s.price)}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                        <div style={{ fontWeight: 800, color: 'var(--brand)', fontSize: 16 }}>{formatPrice(s.price)}</div>
                         {canBook && (
                           <Link href={`/booking?businessId=${business.id}&serviceId=${s.id}`} style={{ fontSize: 12, fontWeight: 700, color: 'white', background: 'var(--brand)', padding: '5px 12px', borderRadius: 8, textDecoration: 'none' }}>
                             Randevu Al
@@ -353,7 +355,7 @@ export default function BusinessProfilePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {business.employees?.map((emp: any) => (
                     <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, border: '1px solid var(--line)', borderRadius: 16 }}>
-                      <div style={{ width: 60, height: 60, borderRadius: '50%', background: `url(${emp.photo}) center/cover`, backgroundColor: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--brand)', fontSize: 22, flexShrink: 0 }}>
+                      <div style={{ width: 60, height: 60, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 22, flexShrink: 0 }}>
                         {!emp.photo && emp.name[0]}
                       </div>
                       <div style={{ flex: 1 }}>
@@ -522,7 +524,7 @@ export default function BusinessProfilePage() {
             </div>
 
             {/* Working hours */}
-            <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24 }}>
+            <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24, marginBottom: 16 }}>
               <h3 style={{ fontWeight: 800, marginBottom: 14, fontSize: 15 }}>Çalışma Saatleri</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {Object.entries(DAY_NAMES).map(([key, name]) => {
@@ -530,7 +532,7 @@ export default function BusinessProfilePage() {
                   const isToday = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()] === key
                   return (
                     <div key={key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: isToday ? 700 : 400 }}>
-                      <span style={{ color: isToday ? 'var(--brand)' : 'var(--text)' }}>{name} {isToday ? '(bugün)' : ''}</span>
+                      <span style={{ color: isToday ? 'var(--brand)' : 'var(--text)' }}>{name}{isToday ? ' (bugün)' : ''}</span>
                       <span style={{ color: h?.isOpen ? 'var(--green)' : '#b42318' }}>
                         {h?.isOpen ? `${h.open} - ${h.close}` : 'Kapalı'}
                       </span>
@@ -539,6 +541,46 @@ export default function BusinessProfilePage() {
                 })}
               </div>
             </div>
+
+            {/* Promo banner */}
+            {canBook && (
+              <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: '20px 24px', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+                  <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Scissors size={22} color="white" />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: 14, lineHeight: 1.35 }}>Profesyonel bakım, mükemmel stil.</div>
+                    <p style={{ fontSize: 13, color: 'var(--muted-color)', lineHeight: 1.5, margin: '4px 0 0' }}>Size en uygun hizmeti seçin, randevunuzu hemen oluşturun.</p>
+                  </div>
+                </div>
+                <Link href={`/booking?businessId=${business.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 46, borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+                  Randevu Oluştur
+                </Link>
+              </div>
+            )}
+
+            {/* Photo preview */}
+            {business.gallery?.length > 0 && (
+              <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                  <h3 style={{ fontWeight: 800, fontSize: 15, margin: 0 }}>Fotoğraflar</h3>
+                  <button onClick={() => setTab('photos')} style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer' }}>Tümü →</button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
+                  {business.gallery.slice(0, 3).map((img: any) => (
+                    <div key={img.id} style={{ aspectRatio: '1', background: `url(${img.url}) center/cover`, backgroundColor: 'var(--surface-2)', borderRadius: 10 }} />
+                  ))}
+                </div>
+                {business.gallery.length > 3 && (
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: 5, marginTop: 10 }}>
+                    {[0,1,2].map(i => (
+                      <div key={i} style={{ width: i === 0 ? 18 : 6, height: 6, borderRadius: 99, background: i === 0 ? 'var(--brand)' : 'var(--line)', transition: 'width 0.2s' }} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -547,7 +589,10 @@ export default function BusinessProfilePage() {
         <>
           <div className="bk-cta-spacer" />
           <div className="bk-mobile-cta">
-            <Link href={`/booking?businessId=${business.id}`}>Randevu Oluştur</Link>
+            <Link href={`/booking?businessId=${business.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, height: 52, borderRadius: 14, background: 'var(--brand)', color: 'white', fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
+              <CalendarDays size={20} />
+              Randevu Oluştur
+            </Link>
           </div>
         </>
       )}

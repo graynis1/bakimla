@@ -415,23 +415,22 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /* Employee preview 2-col grid on desktop */
 .bk-emp-preview-grid { grid-template-columns: 1fr 1fr; }
 
-/* Mobile-only quick-contact strip — hidden on desktop */
-.bk-mobile-contact { display: none; }
+/* Tab icon: hidden on desktop, shown on mobile */
+.bk-tab-icon { display: none; }
 
 @media (max-width: 960px) {
   .bk-salon-layout  { grid-template-columns: 1fr !important; }
 
-  /* Quick-contact strip: show on mobile */
-  .bk-mobile-contact { display: flex !important; background: white; border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 16px; gap: 8px; }
-
-  /* Booking widget in sidebar is redundant — sticky CTA handles it */
-  .bk-salon-booking-widget { display: none !important; }
-
-  /* Sidebar: no sticky, shows below tab content */
+  /* Sidebar: no sticky, flows below tab content in single-column layout */
   .bk-salon-sidebar { position: static !important; top: auto !important; }
 
   /* Employee preview: single column on mobile */
   .bk-emp-preview-grid { grid-template-columns: 1fr !important; }
+
+  /* Tab icons show on mobile */
+  .bk-tab-icon { display: flex !important; }
+  .bk-tab-btn  { padding: 10px 12px !important; min-width: 58px !important; }
+  .bk-tab-label { font-size: 11px !important; }
 
   .bk-gallery-grid  {
     grid-template-columns: 1fr 1fr !important;
