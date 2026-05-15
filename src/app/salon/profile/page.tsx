@@ -177,8 +177,8 @@ export default function SalonProfilePage() {
             {DAYS.map(({ key, label }) => {
               const day = profile.workingHours[key] ?? { isOpen: false, open: '09:00', close: '19:00' }
               return (
-                <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 8, width: 100, flexShrink: 0, cursor: 'pointer' }}>
+                <div key={key} className="bk-wh-row" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <label className="bk-wh-label" style={{ display: 'flex', alignItems: 'center', gap: 8, width: 100, flexShrink: 0, cursor: 'pointer' }}>
                     <input type="checkbox" checked={day.isOpen} onChange={(e) => updateWH(key, 'isOpen', e.target.checked)} style={{ accentColor: 'var(--brand)', width: 16, height: 16 }} />
                     <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
                   </label>

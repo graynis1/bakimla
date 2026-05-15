@@ -262,20 +262,20 @@ export default function SalonEmployeesPage() {
                       {!emp.isActive && <span style={{ fontSize: 11, color: '#b42318', fontWeight: 700 }}>Pasif</span>}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
+                  <div className="bk-emp-actions" style={{ display: 'flex', gap: 8 }}>
                     <button
                       onClick={() => openSchedule(emp)}
                       title="Çalışma Saatleri"
                       style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 10, border: '1px solid var(--line)', background: 'white', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: 'var(--text)' }}
                     >
-                      <Clock size={13} /> Saatler
+                      <Clock size={13} /><span className="bk-emp-action-label"> Saatler</span>
                     </button>
                     <button
                       onClick={() => openServices(emp)}
                       title="Hizmetler"
                       style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 10, border: '1px solid var(--line)', background: 'white', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: 'var(--text)' }}
                     >
-                      <Scissors size={13} /> Hizmetler
+                      <Scissors size={13} /><span className="bk-emp-action-label"> Hizmetler</span>
                     </button>
                     <button onClick={() => openEdit(emp)} style={{ width: 36, height: 36, borderRadius: 10, border: '1px solid var(--line)', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Edit2 size={14} />

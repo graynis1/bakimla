@@ -63,7 +63,7 @@ export default function SalonReviewsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {reviews.map((r) => (
             <div key={r.id} style={{ background: r.isVisible ? 'white' : '#f9f9f9', border: '1px solid var(--line)', borderRadius: 16, padding: '16px 18px', opacity: r.isVisible ? 1 : 0.7 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+              <div className="bk-review-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
                 <div>
                   <span style={{ fontWeight: 700, fontSize: 15 }}>{r.customer.name} {r.customer.surname}</span>
                   <div style={{ color: '#d69b22', fontSize: 14, marginTop: 2 }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>

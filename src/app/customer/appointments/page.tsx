@@ -177,7 +177,7 @@ export default function CustomerAppointmentsPage() {
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid var(--line)' }}>
+                <div className="bk-appt-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 14, borderTop: '1px solid var(--line)' }}>
                   <div>
                     <span style={{ fontWeight: 700, fontSize: 14 }}>{appt.service.name}</span>
                     <span style={{ color: 'var(--muted-color)', fontSize: 13 }}> • {appt.employee.name} {appt.employee.surname}</span>

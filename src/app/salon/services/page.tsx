@@ -103,7 +103,7 @@ export default function SalonServicesPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {services.map((s) => (
-            <div key={s.id} style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 16, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div key={s.id} className="bk-service-row" style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 16, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span style={{ fontWeight: 700, fontSize: 15 }}>{s.name}</span>

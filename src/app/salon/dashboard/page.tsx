@@ -136,7 +136,7 @@ export default async function SalonDashboardPage() {
           recentAppointments.map((appt) => {
             const st = STATUS_CONFIG[appt.status] ?? STATUS_CONFIG.PENDING
             return (
-              <div key={appt.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
+              <div key={appt.id} className="bk-dash-appt-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
                 <div style={{ display: 'flex', gap: 14 }}>
                   <div style={{ fontSize: 13 }}>
                     <div style={{ fontWeight: 700 }}>{appt.customer.name} {appt.customer.surname}</div>
