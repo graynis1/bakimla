@@ -157,7 +157,7 @@ function SearchContent() {
         </form>
 
         {/* Active filters + view toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <div className="bk-search-topbar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
             {city && (
               <span style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 99, fontSize: 13, fontWeight: 600, color: '#2563eb' }}>
@@ -180,7 +180,7 @@ function SearchContent() {
             {!loading && <span style={{ fontSize: 13, color: 'var(--muted-color)', fontWeight: 500 }}>{total} işletme</span>}
           </div>
 
-          <div style={{ display: 'flex', background: 'white', border: '1px solid var(--line)', borderRadius: 12, padding: 4, gap: 4 }}>
+          <div className="bk-view-toggle" style={{ display: 'flex', background: 'white', border: '1px solid var(--line)', borderRadius: 12, padding: 4, gap: 4 }}>
             <button onClick={() => setViewMode('list')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 9, border: 0, background: viewMode === 'list' ? 'var(--brand)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--muted-color)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
               <LayoutGrid size={14} /> Liste
             </button>
@@ -398,10 +398,19 @@ function SearchContent() {
         @media (max-width:900px) {
           .bk-map-split { grid-template-columns:1fr !important; height:auto !important; }
           .bk-map-split > div:first-child { max-height:400px; }
-          .bk-map-split > div:last-child { position:relative !important; top:0 !important; height:420px !important; }
+          .bk-map-split > div:last-child { position:relative !important; top:0 !important; height:380px !important; }
+        }
+        @media (max-width:768px) {
+          .bk-search-layout { grid-template-columns:1fr !important; }
+          .bk-filter-sidebar { position:static !important; top:auto !important; }
         }
         @media (max-width:700px) {
           .bk-cards-grid { grid-template-columns:repeat(2,1fr) !important; }
+        }
+        @media (max-width:540px) {
+          .bk-search-topbar { flex-direction:column !important; align-items:stretch !important; }
+          .bk-search-topbar > * { width:100% !important; }
+          .bk-view-toggle { align-self:flex-end; width:auto !important; }
         }
         @media (max-width:480px) {
           .bk-cards-grid { grid-template-columns:1fr !important; }

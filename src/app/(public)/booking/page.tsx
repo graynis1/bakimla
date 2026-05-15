@@ -176,11 +176,11 @@ function BookingContent() {
         </div>
 
         {/* Step indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 32 }}>
+        <div className="bk-steps-indicator" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 32 }}>
           {STEPS.map((s, i) => (
             <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <div style={{
+                <div className="bk-step-circle" style={{
                   width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: i < step ? 'var(--green)' : i === step ? 'var(--brand)' : 'var(--surface-2)',
                   color: i <= step ? 'white' : 'var(--muted-color)',
@@ -189,10 +189,10 @@ function BookingContent() {
                 }}>
                   {i < step ? <Check size={16} /> : i + 1}
                 </div>
-                <span style={{ fontSize: 11, fontWeight: 600, color: i === step ? 'var(--brand)' : 'var(--muted-color)' }}>{s}</span>
+                <span className="bk-step-label" style={{ fontSize: 11, fontWeight: 600, color: i === step ? 'var(--brand)' : 'var(--muted-color)' }}>{s}</span>
               </div>
               {i < STEPS.length - 1 && (
-                <div style={{ width: 48, height: 2, background: i < step ? 'var(--green)' : 'var(--line)', margin: '0 4px', marginTop: -16 }} />
+                <div className="bk-step-connector" style={{ width: 48, height: 2, background: i < step ? 'var(--green)' : 'var(--line)', margin: '0 4px', marginTop: -16 }} />
               )}
             </div>
           ))}
@@ -401,6 +401,14 @@ function BookingContent() {
         </div>
       </main>
       <Footer />
+      <style>{`
+        @media (max-width: 480px) {
+          .bk-step-label { display: none !important; }
+          .bk-step-circle { width: 28px !important; height: 28px !important; font-size: 11px !important; }
+          .bk-step-connector { width: 20px !important; margin: 0 2px !important; }
+          .bk-steps-indicator { margin-bottom: 24px !important; }
+        }
+      `}</style>
     </div>
   )
 }

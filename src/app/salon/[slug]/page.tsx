@@ -135,7 +135,7 @@ export default function BusinessProfilePage() {
       <Header />
 
       {/* Breadcrumb */}
-      <div style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--muted-color)' }}>
+      <div className="bk-biz-breadcrumb" style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--muted-color)', flexWrap: 'wrap' }}>
         <Link href="/" style={{ color: 'var(--muted-color)', textDecoration: 'none' }}>Ana Sayfa</Link>
         <ChevronRight size={12} />
         <Link href={`/search?city=${business.city}`} style={{ color: 'var(--muted-color)', textDecoration: 'none' }}>{business.city}</Link>
@@ -521,6 +521,29 @@ export default function BusinessProfilePage() {
         </div>
       </main>
       <Footer />
+      <style>{`
+        .bk-biz-breadcrumb { padding: 14px 28px !important; }
+        .bk-salon-layout { grid-template-columns: 1fr 360px; }
+        .bk-salon-sidebar { position: sticky; top: 90px; }
+        .bk-gallery-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 200px 200px; }
+        .bk-gallery-grid > div:first-child { grid-row: span 2; }
+        .bk-grid-3 { grid-template-columns: repeat(3,1fr); }
+
+        @media (max-width: 960px) {
+          .bk-salon-layout { grid-template-columns: 1fr !important; }
+          .bk-salon-sidebar { position: static !important; top: auto !important; }
+          .bk-gallery-grid { grid-template-columns: 1fr 1fr !important; grid-template-rows: 200px !important; }
+          .bk-gallery-grid > div:first-child { grid-row: auto !important; }
+          .bk-gallery-grid > div:nth-child(n+3) { display: none !important; }
+          .bk-grid-3 { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width: 600px) {
+          .bk-biz-breadcrumb { padding: 10px 16px !important; font-size: 12px !important; }
+          .bk-gallery-grid { grid-template-columns: 1fr !important; grid-template-rows: 220px !important; }
+          .bk-gallery-grid > div:nth-child(n+2) { display: none !important; }
+          .bk-grid-3 { grid-template-columns: 1fr 1fr !important; }
+        }
+      `}</style>
     </div>
   )
 }
