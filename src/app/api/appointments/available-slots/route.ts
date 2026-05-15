@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generateTimeSlots } from '@/lib/utils'
-import { addMinutes, format, parseISO } from 'date-fns'
+import { parseISO } from 'date-fns'
 
 export async function GET(req: NextRequest) {
   try {
@@ -76,18 +76,28 @@ export async function GET(req: NextRequest) {
 
     // Remove slots that conflict with existing appointments
     const now = new Date()
-    const isToday = format(date, 'yyyy-MM-dd') === format(now, 'yyyy-MM-dd')
+
+    // Use Istanbul timezone for correct "today" and "current time" checks
+    const istanbulDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(now)
+    const isToday = dateStr === istanbulDate
+
+    let nowMinutes = 0
+    if (isToday) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Europe/Istanbul', hour: 'numeric', minute: 'numeric', hour12: false,
+      }).formatToParts(now)
+      const h = Number(parts.find((p) => p.type === 'hour')?.value ?? '0') % 24
+      const m = Number(parts.find((p) => p.type === 'minute')?.value ?? '0')
+      nowMinutes = h * 60 + m
+    }
 
     const availableSlots = slots.filter((slot) => {
       const [sh, sm] = slot.split(':').map(Number)
       const slotStart = sh * 60 + sm
       const slotEnd = slotStart + service.duration
 
-      // Skip past times
-      if (isToday) {
-        const nowMin = now.getHours() * 60 + now.getMinutes()
-        if (slotStart <= nowMin) return false
-      }
+      // Skip slots that have already started (or start within current minute)
+      if (isToday && slotStart <= nowMinutes) return false
 
       // Check end of day
       const [eh, em] = end.split(':').map(Number)
