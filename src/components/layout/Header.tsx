@@ -175,7 +175,7 @@ export default function Header() {
               <Link href="/auth/login" className="bk-desktop-nav" style={{ padding: '0 14px', height: 38, borderRadius: 10, fontSize: 13.5, fontWeight: 600, color: 'var(--text)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 Giriş Yap
               </Link>
-              <Link href="/auth/register" className="bk-register-btn" style={{ padding: '0 16px', height: 38, borderRadius: 10, fontSize: 13.5, fontWeight: 700, color: 'white', textDecoration: 'none', background: 'var(--brand)', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+              <Link href="/auth/register" style={{ padding: '0 14px', height: 36, borderRadius: 10, fontSize: 13, fontWeight: 700, color: 'white', textDecoration: 'none', background: 'var(--brand)', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', flexShrink: 0 }}>
                 Kayıt Ol
               </Link>
             </>
