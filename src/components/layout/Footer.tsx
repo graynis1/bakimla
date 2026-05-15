@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer style={{ background: 'var(--brand)', color: 'white', marginTop: 'auto' }}>
       <div style={{ maxWidth: 1320, margin: '0 auto', padding: '48px 28px 32px' }}>
-        <div className="bk-footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 32, marginBottom: 40 }}>
+        <div className="bk-footer-grid" style={{ display: 'grid', gap: 32, marginBottom: 40 }}>
           <div>
             <div style={{ marginBottom: 16, display: 'inline-block', background: 'white', borderRadius: 12, padding: '8px 16px' }}>
               <Image src="/logo.png" alt="Bakımla" width={200} height={54} style={{ objectFit: 'contain', height: 36, width: 'auto', display: 'block' }} />
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>
+        <div className="bk-footer-bottom" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, fontSize: 13, color: 'rgba(255,255,255,0.5)', gap: 8 }}>
           <span>© 2025 Bakımla. Tüm hakları saklıdır.</span>
           <span>Türkiye genelinde hizmet vermektedir.</span>
         </div>

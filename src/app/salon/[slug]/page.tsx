@@ -427,7 +427,7 @@ export default function BusinessProfilePage() {
           </div>
 
           {/* RIGHT SIDEBAR */}
-          <div className="bk-salon-sidebar" style={{ position: 'sticky', top: 90 }}>
+          <div className="bk-salon-sidebar">
             {/* Book widget */}
             <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24, marginBottom: 16 }}>
               <h3 style={{ fontWeight: 800, marginBottom: 16, fontSize: 16 }}>Randevu Al</h3>
@@ -520,6 +520,16 @@ export default function BusinessProfilePage() {
           </div>
         </div>
       </main>
+
+      {canBook && (
+        <>
+          <div className="bk-cta-spacer" />
+          <div className="bk-mobile-cta">
+            <Link href={`/booking?businessId=${business.id}`}>Randevu Oluştur</Link>
+          </div>
+        </>
+      )}
+
       <Footer />
     </div>
   )

@@ -408,8 +408,9 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /* ─────────────────────────────────────────────────────────── */
 
 /* Desktop defaults — defined in CSS so media queries can override without !important conflict */
-.bk-salon-layout { grid-template-columns: 1fr 360px; }
-.bk-gallery-grid { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 200px 200px; }
+.bk-salon-layout   { grid-template-columns: 1fr 360px; }
+.bk-gallery-grid   { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 200px 200px; }
+.bk-salon-sidebar  { position: sticky; top: 90px; }
 
 @media (max-width: 960px) {
   .bk-salon-layout  { grid-template-columns: 1fr !important; }
@@ -516,12 +517,40 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 }
 
 /* ─────────────────────────────────────────────────────────── */
-/*  PUBLIC SERVICE ROWS (business profile page)                */
+/*  MOBILE STICKY BOOKING CTA (salon profile page)             */
 /* ─────────────────────────────────────────────────────────── */
 
-@media (max-width: 480px) {
-  .bk-pub-svc-row { flex-wrap: wrap !important; }
-  .bk-pub-svc-row > div:last-child { width: 100% !important; align-items: flex-start !important; margin-top: 4px !important; }
+.bk-mobile-cta   { display: none; }
+.bk-cta-spacer   { display: none; }
+
+@media (max-width: 960px) {
+  .bk-mobile-cta {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    background: white;
+    border-top: 1px solid var(--line);
+    z-index: 50;
+    box-shadow: 0 -4px 20px rgba(15,23,36,0.10);
+  }
+  .bk-mobile-cta a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--brand);
+    color: white;
+    font-weight: 800;
+    font-size: 16px;
+    text-decoration: none;
+    letter-spacing: -0.2px;
+  }
+  .bk-cta-spacer { display: block; height: 80px; }
 }
 
 /* ─────────────────────────────────────────────────────────── */
@@ -590,14 +619,16 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /*  FOOTER                                                     */
 /* ─────────────────────────────────────────────────────────── */
 
+.bk-footer-grid   { grid-template-columns: 2fr 1fr 1fr 1fr; }
+.bk-footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+
 @media (max-width: 768px) {
-  .bk-footer-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 24px !important;
-  }
+  .bk-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
 }
+
 @media (max-width: 480px) {
-  .bk-footer-grid { grid-template-columns: 1fr !important; }
+  .bk-footer-grid   { grid-template-columns: 1fr !important; }
+  .bk-footer-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
 }
 
 /* ─────────────────────────────────────────────────────────── */
