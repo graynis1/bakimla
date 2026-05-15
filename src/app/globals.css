@@ -101,7 +101,6 @@
 }
 
 /* ── Base ──────────────────────────────────────────────────── */
-html, body { overflow-x: hidden; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -563,6 +562,8 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 @media (max-width: 768px) {
   .bk-blog-featured { grid-template-columns: 1fr !important; }
 }
+
+.bk-blog-editor { grid-template-columns: 1fr 320px; }
 
 @media (max-width: 900px) {
   .bk-blog-editor { grid-template-columns: 1fr !important; }

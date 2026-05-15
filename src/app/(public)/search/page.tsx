@@ -262,7 +262,7 @@ function SearchContent() {
 
             {/* === MAP MODE === */}
             {isMapMode && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 16, height: 'calc(100vh - 200px)', minHeight: 500 }} className="bk-map-split">
+              <div style={{ display: 'grid', gap: 16, height: 'calc(100vh - 200px)', minHeight: 500 }} className="bk-map-split">
 
                 {/* Scrollable list */}
                 <div style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, paddingRight: 4 }}>

@@ -79,7 +79,7 @@ export default function EditBlogPostPage() {
         <h1 style={{ fontSize: 22, fontWeight: 800, color: 'var(--brand)', margin: 0 }}>Yazıyı Düzenle</h1>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, alignItems: 'start' }} className="bk-blog-editor">
+      <div style={{ display: 'grid', gap: 20, alignItems: 'start' }} className="bk-blog-editor">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24 }}>
             <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Başlık *</label>
