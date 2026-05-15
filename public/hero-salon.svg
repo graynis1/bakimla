@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#f2e8da"/>
+      <stop offset="60%" stop-color="#ecdcca"/>
+      <stop offset="100%" stop-color="#e4d0b8"/>
+    </linearGradient>
+    <radialGradient id="topLight" cx="60%" cy="5%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rimLight" cx="90%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#f8e8c8" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#f8e8c8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="leftFade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f2ece2" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#f2ece2" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#f2ece2" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cdb898" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#c0a880" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="skinHead" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#f0c9a0"/>
+      <stop offset="55%" stop-color="#daa878"/>
+      <stop offset="100%" stop-color="#c49068"/>
+    </radialGradient>
+    <radialGradient id="skinShoulder" cx="35%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#ecc49a"/>
+      <stop offset="70%" stop-color="#d4a07a"/>
+      <stop offset="100%" stop-color="#c08060"/>
+    </radialGradient>
+    <radialGradient id="hairBun" cx="28%" cy="22%" r="62%">
+      <stop offset="0%" stop-color="#4a2e1c"/>
+      <stop offset="45%" stop-color="#211008"/>
+      <stop offset="100%" stop-color="#0e0806"/>
+    </radialGradient>
+    <filter id="b3"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="b5"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="b14"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="b22"><feGaussianBlur stdDeviation="22"/></filter>
+    <filter id="b1"><feGaussianBlur stdDeviation="1.2"/></filter>
+  </defs>
+
+  <!-- ─── Background ─── -->
+  <rect width="700" height="480" fill="url(#bg)"/>
+  <rect width="700" height="480" fill="url(#topLight)"/>
+  <rect width="700" height="480" fill="url(#rimLight)"/>
+
+  <!-- ─── Shelf wall (right upper area, blurred) ─── -->
+  <rect x="440" y="0" width="260" height="260" fill="#e4d0b4" opacity="0.55" filter="url(#b3)"/>
+  <!-- Shelf planks -->
+  <rect x="440" y="82" width="260" height="7" rx="1" fill="#c8a880" opacity="0.55" filter="url(#b1)"/>
+  <rect x="440" y="168" width="260" height="7" rx="1" fill="#c8a880" opacity="0.45" filter="url(#b1)"/>
+
+  <!-- Top shelf products (blurred like out-of-focus background) -->
+  <g filter="url(#b5)" opacity="0.68">
+    <rect x="452" y="42" width="20" height="40" rx="5" fill="#7a5838"/>
+    <rect x="479" y="46" width="16" height="36" rx="4" fill="#a08050"/>
+    <rect x="502" y="40" width="24" height="42" rx="5" fill="#5a3c1e"/>
+    <rect x="533" y="44" width="18" height="38" rx="4" fill="#c8a868"/>
+    <rect x="558" y="42" width="21" height="40" rx="5" fill="#8a6040"/>
+    <rect x="587" y="46" width="16" height="36" rx="4" fill="#6a4828"/>
+    <rect x="610" y="40" width="22" height="42" rx="5" fill="#9a7848"/>
+    <rect x="639" y="44" width="18" height="38" rx="4" fill="#b09060"/>
+    <rect x="664" y="42" width="20" height="40" rx="5" fill="#7a5838"/>
+  </g>
+  <!-- Second shelf products -->
+  <g filter="url(#b8)" opacity="0.52">
+    <rect x="455" y="130" width="18" height="38" rx="4" fill="#9a7848"/>
+    <rect x="480" y="126" width="23" height="42" rx="5" fill="#6a4c28"/>
+    <rect x="510" y="130" width="17" height="38" rx="4" fill="#c0a060"/>
+    <rect x="534" y="124" width="20" height="44" rx="5" fill="#8a6038"/>
+    <rect x="561" y="128" width="22" height="40" rx="4" fill="#5a3c1a"/>
+    <rect x="590" y="126" width="18" height="42" rx="5" fill="#a08050"/>
+    <rect x="615" y="130" width="21" height="38" rx="4" fill="#7a5830"/>
+    <rect x="643" y="126" width="16" height="42" rx="5" fill="#b49060"/>
+    <rect x="666" y="130" width="20" height="38" rx="4" fill="#6a4828"/>
+  </g>
+
+  <!-- ─── Floor ─── -->
+  <rect x="0" y="390" width="700" height="90" fill="url(#floorG)"/>
+
+  <!-- ─── Woman ─── -->
+
+  <!-- Body — dark sleeveless top (back view) -->
+  <path d="M 192 480 L 192 318
+     Q 232 268 282 244
+     L 283 206 L 340 206 L 341 244
+     Q 390 268 430 318
+     L 430 480 Z"
+    fill="#1c1410" opacity="0.92"/>
+
+  <!-- Left shoulder / arm (skin visible) -->
+  <ellipse cx="230" cy="274" rx="40" ry="28" fill="url(#skinShoulder)" opacity="0.82" transform="rotate(-12 230 274)"/>
+  <!-- Left upper arm continuation -->
+  <path d="M 192 340 Q 208 300 240 278" stroke="#daa878" stroke-width="26" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <!-- Arm shadow on body -->
+  <path d="M 200 340 Q 218 302 248 280" stroke="#1c1410" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Right shoulder barely visible -->
+  <ellipse cx="398" cy="272" rx="28" ry="18" fill="#c89068" opacity="0.22" transform="rotate(10 398 272)"/>
+
+  <!-- Neck -->
+  <rect x="294" y="182" width="28" height="38" rx="11" fill="#d8a47a" opacity="0.88"/>
+  <!-- Neck shadow (back) -->
+  <rect x="294" y="182" width="28" height="38" rx="11" fill="#120e0a" opacity="0.08"/>
+
+  <!-- ── Head ── -->
+  <ellipse cx="309" cy="153" rx="48" ry="52" fill="url(#skinHead)" opacity="0.92"/>
+
+  <!-- Ear (right ear visible from side) -->
+  <ellipse cx="353" cy="158" rx="11" ry="14" fill="#c8946a" opacity="0.72"/>
+  <!-- Small earring -->
+  <circle cx="353" cy="169" r="4.5" fill="#d4a838" opacity="0.65"/>
+  <circle cx="353" cy="169" r="2.5" fill="#f0c860" opacity="0.55"/>
+
+  <!-- Jaw / chin shadow -->
+  <ellipse cx="306" cy="196" rx="40" ry="14" fill="#c09070" opacity="0.2" filter="url(#b3)"/>
+
+  <!-- ── Hair ── -->
+  <!-- Side hair (hugging head) -->
+  <path d="M 263 110 Q 248 136 250 168 Q 252 192 270 206"
+    stroke="#150c06" stroke-width="28" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <path d="M 350 112 Q 365 138 362 170 Q 360 193 345 206"
+    stroke="#150c06" stroke-width="22" stroke-linecap="round" fill="none" opacity="0.92"/>
+
+  <!-- Hair crown -->
+  <ellipse cx="308" cy="110" rx="50" ry="52" fill="#120a04" opacity="0.96"/>
+
+  <!-- Bun base -->
+  <ellipse cx="310" cy="74" rx="42" ry="34" fill="url(#hairBun)" opacity="1"/>
+  <!-- Bun body -->
+  <ellipse cx="304" cy="70" rx="36" ry="28" fill="#1e1008" opacity="0.88"/>
+  <ellipse cx="312" cy="66" rx="28" ry="22" fill="#160c06" opacity="0.92"/>
+  <!-- Bun center -->
+  <circle cx="308" cy="65" rx="16" ry="15" fill="#0e0804" opacity="0.9"/>
+
+  <!-- Bun sheen (highlight) -->
+  <ellipse cx="296" cy="59" rx="13" ry="9" fill="#6a3c1c" opacity="0.35" filter="url(#b3)"/>
+
+  <!-- Hair texture strands -->
+  <path d="M 272 92 Q 287 74 304 70" stroke="#2e1a0a" stroke-width="2" fill="none" opacity="0.55"/>
+  <path d="M 268 100 Q 284 82 302 76" stroke="#261408" stroke-width="1.5" fill="none" opacity="0.45"/>
+  <path d="M 344 95 Q 330 76 314 72" stroke="#2e1a0a" stroke-width="2" fill="none" opacity="0.55"/>
+  <path d="M 348 104 Q 333 84 317 78" stroke="#261408" stroke-width="1.5" fill="none" opacity="0.45"/>
+
+  <!-- Nape of neck hair -->
+  <ellipse cx="308" cy="198" rx="25" ry="15" fill="#120a04" opacity="0.88"/>
+
+  <!-- ── Lighting effects ── -->
+  <!-- Warm rim light on right side of face/head -->
+  <path d="M 348 130 Q 362 155 360 188 Q 358 210 348 222"
+    stroke="#f0d8a0" stroke-width="5" fill="none" opacity="0.1" filter="url(#b3)"/>
+  <!-- Face highlight (left side, light source) -->
+  <ellipse cx="275" cy="142" rx="18" ry="22" fill="#f8e8d0" opacity="0.07" filter="url(#b5)"/>
+
+  <!-- ── Soft bokeh spheres ── -->
+  <circle cx="550" cy="330" r="80" fill="#e8d4a8" opacity="0.09" filter="url(#b22)"/>
+  <circle cx="140" cy="320" r="55" fill="#f0dfc0" opacity="0.07" filter="url(#b14)"/>
+  <circle cx="620" cy="420" r="60" fill="#d8c090" opacity="0.08" filter="url(#b14)"/>
+  <circle cx="440" cy="440" r="45" fill="#e4c898" opacity="0.07" filter="url(#b8)"/>
+  <circle cx="100" cy="420" r="40" fill="#f0e0b8" opacity="0.06" filter="url(#b8)"/>
+
+  <!-- ── Left edge fade (blends into white hero content) ── -->
+  <rect width="700" height="480" fill="url(#leftFade)"/>
+</svg>

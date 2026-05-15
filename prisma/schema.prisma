@@ -1,0 +1,467 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CUSTOMER
+  SALON_OWNER
+  ADMIN
+}
+
+enum BusinessCategory {
+  BARBER
+  HAIR_SALON
+  NAIL_SALON
+  BEAUTY_CENTER
+  SKIN_CARE
+  REFLEXOLOGY
+  MASSAGE
+  EPILATION
+  FITNESS
+  TEETH_WHITENING
+  BROW_LASH
+  YOGA_PILATES
+  PET_GROOMING
+  DIETITIAN
+  PHYSIOTHERAPY
+  SPA
+}
+
+enum BusinessStatus {
+  PENDING
+  APPROVED
+  SUSPENDED
+  REJECTED
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PENDING_PAYMENT
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PointTransactionType {
+  EARNED
+  SPENT
+  EXPIRED
+}
+
+enum NotificationType {
+  APPOINTMENT_CONFIRMED
+  APPOINTMENT_CANCELLED
+  APPOINTMENT_REMINDER
+  REVIEW_RECEIVED
+  WELCOME
+  PAYMENT_APPROVED
+  PAYMENT_REJECTED
+  SUBSCRIPTION_EXPIRING
+  GENERAL
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  surname       String
+  phone         String?
+  avatar        String?
+  role          UserRole  @default(CUSTOMER)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  businesses    Business[]
+  appointments  Appointment[]
+  reviews       Review[]
+  favorites     Favorite[]
+  loyaltyPoints LoyaltyPoints?
+  pointTransactions PointTransaction[]
+  notifications Notification[]
+  passwordResetTokens PasswordResetToken[]
+  blogPosts     BlogPost[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Business {
+  id              String           @id @default(cuid())
+  ownerId         String
+  name            String
+  slug            String           @unique
+  description     String?
+  category        BusinessCategory
+  phone           String
+  address         String
+  city            String
+  district        String
+  coverImage      String?
+  workingHours    Json
+  status          BusinessStatus   @default(PENDING)
+  rating          Float            @default(0)
+  reviewCount     Int              @default(0)
+  metaTitle       String?
+  metaDescription String?
+  whatsapp        String?
+  instagram       String?
+  businessEmail   String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  owner         User             @relation(fields: [ownerId], references: [id])
+  employees     Employee[]
+  services      Service[]
+  appointments  Appointment[]
+  reviews       Review[]
+  favorites     Favorite[]
+  gallery       GalleryImage[]
+  holidays      Holiday[]
+  subscription  Subscription?
+  payments      Payment[]
+
+  @@index([city, district])
+  @@index([category])
+  @@index([status])
+  @@index([slug])
+  @@index([rating])
+}
+
+model Employee {
+  id          String    @id @default(cuid())
+  businessId  String
+  name        String
+  surname     String
+  title       String?
+  bio         String?
+  phone       String?
+  avatar      String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  business    Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  services    EmployeeService[]
+  appointments Appointment[]
+  schedule    EmployeeSchedule[]
+  holidays    EmployeeHoliday[]
+
+  @@index([businessId])
+}
+
+model EmployeeService {
+  employeeId  String
+  serviceId   String
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([employeeId, serviceId])
+}
+
+model EmployeeSchedule {
+  id          String   @id @default(cuid())
+  employeeId  String
+  dayOfWeek   Int
+  startTime   String
+  endTime     String
+  isWorking   Boolean  @default(true)
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, dayOfWeek])
+}
+
+model EmployeeHoliday {
+  id          String   @id @default(cuid())
+  employeeId  String
+  date        DateTime @db.Date
+  reason      String?
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  businessId  String
+  name        String
+  description String?
+  duration    Int
+  price       Decimal   @db.Decimal(10, 2)
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  business    Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  employees   EmployeeService[]
+  appointments Appointment[]
+
+  @@index([businessId])
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  businessId  String
+  employeeId  String
+  customerId  String
+  serviceId   String
+  date        DateTime          @db.Date
+  startTime   String
+  endTime     String
+  status      AppointmentStatus @default(PENDING)
+  price       Decimal           @db.Decimal(10, 2)
+  notes       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  business    Business   @relation(fields: [businessId], references: [id])
+  employee    Employee   @relation(fields: [employeeId], references: [id])
+  customer    User       @relation(fields: [customerId], references: [id])
+  service     Service    @relation(fields: [serviceId], references: [id])
+  review      Review?
+  pointTransactions PointTransaction[]
+
+  @@index([businessId, date])
+  @@index([employeeId, date])
+  @@index([customerId])
+  @@index([status])
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  businessId    String
+  customerId    String
+  appointmentId String?  @unique
+  rating        Int
+  comment       String?
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  business    Business    @relation(fields: [businessId], references: [id])
+  customer    User        @relation(fields: [customerId], references: [id])
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@index([businessId])
+}
+
+model Favorite {
+  id          String   @id @default(cuid())
+  userId      String
+  businessId  String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+}
+
+model LoyaltyPoints {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  points      Int      @default(0)
+  totalEarned Int      @default(0)
+  totalSpent  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions PointTransaction[]
+}
+
+model PointTransaction {
+  id            String               @id @default(cuid())
+  userId        String
+  loyaltyId     String?
+  points        Int
+  type          PointTransactionType
+  description   String?
+  appointmentId String?
+  createdAt     DateTime             @default(now())
+
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loyalty     LoyaltyPoints? @relation(fields: [loyaltyId], references: [id])
+  appointment Appointment?   @relation(fields: [appointmentId], references: [id])
+
+  @@index([userId])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  businessId  String
+  url         String
+  caption     String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  businessId  String
+  date        DateTime @db.Date
+  description String?
+
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, date])
+}
+
+model Plan {
+  id            String    @id @default(cuid())
+  name          String    @unique
+  maxEmployees  Int
+  monthlyPrice  Decimal   @db.Decimal(10, 2)
+  yearlyPrice   Decimal   @db.Decimal(10, 2)
+  features      Json
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  subscriptions Subscription[]
+  payments      Payment[]
+
+  @@index([isActive])
+}
+
+model Subscription {
+  id          String             @id @default(cuid())
+  businessId  String             @unique
+  planId      String
+  status      SubscriptionStatus @default(TRIAL)
+  startDate   DateTime
+  endDate     DateTime?
+  trialEndsAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  plan        Plan     @relation(fields: [planId], references: [id])
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  businessId  String
+  planId      String
+  amount      Decimal       @db.Decimal(10, 2)
+  period      String
+  receiptUrl  String?
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  business    Business @relation(fields: [businessId], references: [id])
+  plan        Plan     @relation(fields: [planId], references: [id])
+
+  @@index([businessId])
+  @@index([status])
+}
+
+model BankAccount {
+  id          String   @id @default(cuid())
+  bankName    String
+  accountName String
+  iban        String   @unique
+  branch      String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType
+  relatedId String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String    @db.Text
+  coverImage  String?
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  authorId    String?
+  metaTitle   String?
+  metaDesc    String?
+  tags        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  author      User?     @relation(fields: [authorId], references: [id])
+
+  @@index([isPublished, publishedAt])
+  @@index([slug])
+}
+
+model Campaign {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  code        String?   @unique
+  discount    Int?
+  imageUrl    String?
+  isActive    Boolean   @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+}
