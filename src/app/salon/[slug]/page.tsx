@@ -116,7 +116,8 @@ export default function BusinessProfilePage() {
 
   if (!business) return notFound()
 
-  const wh = business.workingHours as WorkingHours
+  // guard against empty working-hours so Object.entries never throws
+  const wh = (business.workingHours ?? {}) as WorkingHours
   const openNow = isOpenNow(wh)
   const todayHours = getTodayHours(wh)
   const canBook = business.subscription?.status === 'ACTIVE' || business.subscription?.status === 'TRIAL'
@@ -131,11 +132,11 @@ export default function BusinessProfilePage() {
   ]
 
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh', overflowX: 'hidden', maxWidth: '100vw' }}>
       <Header />
 
       {/* Breadcrumb */}
-      <div className="bk-biz-breadcrumb" style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 28px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--muted-color)', flexWrap: 'wrap' }}>
+      <div className="bk-biz-breadcrumb" style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--muted-color)', flexWrap: 'wrap' }}>
         <Link href="/" style={{ color: 'var(--muted-color)', textDecoration: 'none' }}>Ana Sayfa</Link>
         <ChevronRight size={12} />
         <Link href={`/search?city=${business.city}`} style={{ color: 'var(--muted-color)', textDecoration: 'none' }}>{business.city}</Link>
@@ -145,7 +146,7 @@ export default function BusinessProfilePage() {
         <span style={{ color: 'var(--text)', fontWeight: 600 }}>{business.name}</span>
       </div>
 
-      <main style={{ maxWidth: 1320, margin: '0 auto', padding: '0 20px 48px' }}>
+      <main className="bk-salon-main" style={{ maxWidth: 1320, margin: '0 auto', padding: '0 20px 48px' }}>
         {/* Gallery */}
         {business.gallery?.length > 0 ? (
           <div className="bk-gallery-grid" style={{ display: 'grid', gap: 8, borderRadius: 20, overflow: 'hidden', marginBottom: 24 }}>
@@ -171,13 +172,13 @@ export default function BusinessProfilePage() {
             {/* Header card with tabs */}
             <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, marginBottom: 20, overflow: 'hidden' }}>
               <div className="bk-biz-header-pad" style={{ padding: 24 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 99, background: 'var(--surface-2)', color: 'var(--muted-color)' }}>
                       {categoryLabels[business.category as keyof typeof categoryLabels]}
                     </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
-                      <h1 className="bk-biz-name" style={{ fontSize: 26, fontWeight: 800, color: 'var(--brand)', margin: 0 }}>{business.name}</h1>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, minWidth: 0 }}>
+                      <h1 className="bk-biz-name" style={{ fontSize: 26, fontWeight: 800, color: 'var(--brand)', margin: 0, wordBreak: 'break-word', minWidth: 0 }}>{business.name}</h1>
                       <CheckCircle2 size={20} style={{ color: '#3b82f6', flexShrink: 0 }} />
                     </div>
                     <div className="bk-biz-header-meta" style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 14, color: 'var(--muted-color)', marginTop: 8, flexWrap: 'wrap' }}>
@@ -249,13 +250,13 @@ export default function BusinessProfilePage() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {business.services.slice(0, 3).map((s: any) => (
-                        <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 12 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 12, gap: 8 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
                             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                               <User size={18} color="var(--muted-color)" />
                             </div>
-                            <div>
-                              <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontWeight: 600, fontSize: 14, wordBreak: 'break-word' }}>{s.name}</div>
                               <div style={{ fontSize: 12, color: 'var(--muted-color)', marginTop: 2 }}>{s.duration} dk</div>
                             </div>
                           </div>
@@ -286,9 +287,9 @@ export default function BusinessProfilePage() {
                           <div style={{ width: 42, height: 42, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 16, flexShrink: 0 }}>
                             {!emp.photo && emp.name[0]}
                           </div>
-                          <div>
-                            <div style={{ fontWeight: 700, fontSize: 13 }}>{emp.name} {emp.surname}</div>
-                            {emp.title && <div style={{ fontSize: 11, color: 'var(--muted-color)' }}>{emp.title}</div>}
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontWeight: 700, fontSize: 13, wordBreak: 'break-word' }}>{emp.name} {emp.surname}</div>
+                            {emp.title && <div style={{ fontSize: 11, color: 'var(--muted-color)', wordBreak: 'break-word' }}>{emp.title}</div>}
                           </div>
                         </div>
                       ))}
@@ -322,14 +323,14 @@ export default function BusinessProfilePage() {
                 <h2 style={{ fontWeight: 800, fontSize: 16, marginBottom: 16 }}>Tüm Hizmetler</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {business.services?.map((s: any) => (
-                    <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16, border: '1px solid var(--line)', borderRadius: 14 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16, border: '1px solid var(--line)', borderRadius: 14, gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0 }}>
                         <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                           <User size={20} color="var(--muted-color)" />
                         </div>
-                        <div>
-                          <div style={{ fontWeight: 600 }}>{s.name}</div>
-                          {s.description && <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2 }}>{s.description}</div>}
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontWeight: 600, wordBreak: 'break-word' }}>{s.name}</div>
+                          {s.description && <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2, wordBreak: 'break-word' }}>{s.description}</div>}
                           <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 4 }}>{s.duration} dk</div>
                         </div>
                       </div>
@@ -358,9 +359,9 @@ export default function BusinessProfilePage() {
                       <div style={{ width: 60, height: 60, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 22, flexShrink: 0 }}>
                         {!emp.photo && emp.name[0]}
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 700, fontSize: 15 }}>{emp.name} {emp.surname}</div>
-                        {emp.title && <div style={{ fontSize: 13, color: 'var(--muted-color)' }}>{emp.title}</div>}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, wordBreak: 'break-word' }}>{emp.name} {emp.surname}</div>
+                        {emp.title && <div style={{ fontSize: 13, color: 'var(--muted-color)', wordBreak: 'break-word' }}>{emp.title}</div>}
                         {emp.services?.length > 0 && (
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
                             {emp.services.slice(0, 4).map((es: any) => (
@@ -455,7 +456,7 @@ export default function BusinessProfilePage() {
             {/* Book widget */}
             <div className="bk-salon-booking-widget" style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24, marginBottom: 16 }}>
               <h3 style={{ fontWeight: 800, marginBottom: 16, fontSize: 16 }}>Randevu Al</h3>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 20, maxWidth: '100%', overflow: 'hidden' }}>
                 {['Hizmet','Çalışan','Saat','Onay'].map((s, i) => (
                   <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
@@ -481,16 +482,16 @@ export default function BusinessProfilePage() {
             <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 24, marginBottom: 16 }}>
               <h3 style={{ fontWeight: 800, marginBottom: 14, fontSize: 15 }}>İletişim</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14, color: 'var(--muted-color)' }}>
-                <a href={`tel:${business.phone}`} style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>
+                <a href={`tel:${business.phone}`} style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600, minWidth: 0 }}>
                   <span style={{ width: 32, height: 32, borderRadius: 8, background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Phone size={15} color="#15803d" /></span>
-                  {business.phone}
+                  <span style={{ wordBreak: 'break-word', minWidth: 0 }}>{business.phone}</span>
                 </a>
-                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', color: 'var(--muted-color)' }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', color: 'var(--muted-color)', minWidth: 0 }}>
                   <span style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}><MapPin size={15} /></span>
-                  <span>{business.address}, {business.district}, {business.city}</span>
+                  <span style={{ wordBreak: 'break-word', minWidth: 0 }}>{business.address}, {business.district}, {business.city}</span>
                 </div>
                 {business.whatsapp && (
-                  <a href={`https://wa.me/90${business.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>
+                  <a href={`https://wa.me/90${business.whatsapp.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600, minWidth: 0 }}>
                     <span style={{ width: 32, height: 32, borderRadius: 8, background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     </span>
@@ -498,17 +499,17 @@ export default function BusinessProfilePage() {
                   </a>
                 )}
                 {business.businessEmail && (
-                  <a href={`mailto:${business.businessEmail}`} style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>
+                  <a href={`mailto:${business.businessEmail}`} style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600, minWidth: 0, overflow: 'hidden' }}>
                     <span style={{ width: 32, height: 32, borderRadius: 8, background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Mail size={15} color="#1d4ed8" /></span>
-                    {business.businessEmail}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>{business.businessEmail}</span>
                   </a>
                 )}
                 {business.instagram && (
-                  <a href={`https://instagram.com/${business.instagram}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>
+                  <a href={`https://instagram.com/${business.instagram}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', gap: 10, alignItems: 'center', textDecoration: 'none', color: 'var(--text)', fontWeight: 600, minWidth: 0, overflow: 'hidden' }}>
                     <span style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </span>
-                    @{business.instagram}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>@{business.instagram}</span>
                   </a>
                 )}
               </div>

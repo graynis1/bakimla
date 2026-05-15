@@ -101,7 +101,7 @@
 }
 
 /* ── Base ──────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
 
 body {
   background: var(--bg);
@@ -110,6 +110,7 @@ body {
   padding-bottom: var(--bottom-nav-h);
   overflow-x: hidden;
   width: 100%;
+  max-width: 100vw;
 }
 
 @layer base {
@@ -428,6 +429,12 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /* Tab icon: hidden on desktop, shown on mobile */
 .bk-tab-icon { display: none; }
 
+/* Prevent service rows from overflowing their card */
+.bk-pub-svc-row { max-width: 100%; box-sizing: border-box; }
+
+/* Tab bar: hide scrollbar on WebKit */
+.bk-tab-scroll::-webkit-scrollbar { display: none; }
+
 @media (max-width: 960px) {
   .bk-salon-layout  { grid-template-columns: 1fr !important; }
 
@@ -463,8 +470,16 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 @media (max-width: 640px) {
   .bk-biz-breadcrumb  { padding: 10px 16px !important; font-size: 12px !important; }
   .bk-biz-header-meta { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
-  .bk-biz-name        { font-size: 20px !important; }
+  .bk-biz-name        { font-size: 20px !important; word-break: break-word !important; }
   .bk-biz-header-pad  { padding: 16px !important; }
+}
+
+/* Ensure salon public page never causes horizontal overflow */
+@media (max-width: 768px) {
+  .bk-salon-main { padding-left: 12px !important; padding-right: 12px !important; }
+}
+@media (max-width: 480px) {
+  .bk-salon-main { padding-left: 8px !important; padding-right: 8px !important; }
 }
 
 /* ─────────────────────────────────────────────────────────── */
