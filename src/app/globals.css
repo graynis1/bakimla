@@ -510,6 +510,15 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 }
 
 /* ─────────────────────────────────────────────────────────── */
+/*  PUBLIC SERVICE ROWS (business profile page)                */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .bk-pub-svc-row { flex-wrap: wrap !important; }
+  .bk-pub-svc-row > div:last-child { width: 100% !important; align-items: flex-start !important; margin-top: 4px !important; }
+}
+
+/* ─────────────────────────────────────────────────────────── */
 /*  BOOKING PAGE                                               */
 /* ─────────────────────────────────────────────────────────── */
 

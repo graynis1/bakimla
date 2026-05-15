@@ -180,7 +180,7 @@ export default function BusinessProfilePage() {
                       <h1 style={{ fontSize: 26, fontWeight: 800, color: 'var(--brand)', margin: 0 }}>{business.name}</h1>
                       <CheckCircle2 size={20} style={{ color: '#3b82f6', flexShrink: 0 }} />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 14, color: 'var(--muted-color)', marginTop: 8, flexWrap: 'wrap' }}>
+                    <div className="bk-biz-header-meta" style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 14, color: 'var(--muted-color)', marginTop: 8, flexWrap: 'wrap' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#d69b22', fontWeight: 700 }}>
                         <Star size={14} fill="currentColor" /> {Number(business.rating).toFixed(1)}
                       </span>
@@ -243,7 +243,7 @@ export default function BusinessProfilePage() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {business.services.slice(0, 3).map((s: any) => (
-                        <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 12 }}>
+                        <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 12 }}>
                           <div>
                             <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
                             <div style={{ fontSize: 12, color: 'var(--muted-color)', marginTop: 2 }}>⏱ {s.duration} dk</div>
@@ -303,7 +303,7 @@ export default function BusinessProfilePage() {
                 <h2 style={{ fontWeight: 800, fontSize: 16, marginBottom: 16 }}>Tüm Hizmetler</h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {business.services?.map((s: any) => (
-                    <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16, border: '1px solid var(--line)', borderRadius: 14 }}>
+                    <div key={s.id} className="bk-pub-svc-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16, border: '1px solid var(--line)', borderRadius: 14 }}>
                       <div>
                         <div style={{ fontWeight: 600 }}>{s.name}</div>
                         {s.description && <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2 }}>{s.description}</div>}
