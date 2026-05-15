@@ -4,7 +4,7 @@ import Image from 'next/image'
 export default function Footer() {
   return (
     <footer style={{ background: 'var(--brand)', color: 'white', marginTop: 'auto' }}>
-      <div style={{ maxWidth: 1320, margin: '0 auto', padding: '48px 28px 32px' }}>
+      <div className="bk-footer-inner" style={{ maxWidth: 1320, margin: '0 auto', padding: '48px 28px 32px' }}>
         <div className="bk-footer-grid" style={{ display: 'grid', gap: 32, marginBottom: 40 }}>
           <div>
             <div style={{ marginBottom: 16, display: 'inline-block', background: 'white', borderRadius: 12, padding: '8px 16px' }}>

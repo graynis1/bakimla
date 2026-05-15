@@ -585,18 +585,6 @@ export default function BusinessProfilePage() {
         </div>
       </main>
 
-      {canBook && (
-        <>
-          <div className="bk-cta-spacer" />
-          <div className="bk-mobile-cta">
-            <Link href={`/booking?businessId=${business.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, height: 52, borderRadius: 14, background: 'var(--brand)', color: 'white', fontWeight: 800, fontSize: 16, textDecoration: 'none' }}>
-              <CalendarDays size={20} />
-              Randevu Oluştur
-            </Link>
-          </div>
-        </>
-      )}
-
       <Footer />
     </div>
   )

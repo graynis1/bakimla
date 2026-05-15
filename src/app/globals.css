@@ -533,42 +533,6 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
   .bk-review-header > div:last-child { align-self: flex-start !important; }
 }
 
-/* ─────────────────────────────────────────────────────────── */
-/*  MOBILE STICKY BOOKING CTA (salon profile page)             */
-/* ─────────────────────────────────────────────────────────── */
-
-.bk-mobile-cta   { display: none; }
-.bk-cta-spacer   { display: none; }
-
-@media (max-width: 960px) {
-  .bk-mobile-cta {
-    display: block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    background: white;
-    border-top: 1px solid var(--line);
-    z-index: 50;
-    box-shadow: 0 -4px 20px rgba(15,23,36,0.10);
-  }
-  .bk-mobile-cta a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 52px;
-    border-radius: 14px;
-    background: var(--brand);
-    color: white;
-    font-weight: 800;
-    font-size: 16px;
-    text-decoration: none;
-    letter-spacing: -0.2px;
-  }
-  .bk-cta-spacer { display: block; height: 80px; }
-}
 
 /* ─────────────────────────────────────────────────────────── */
 /*  BOOKING PAGE                                               */
@@ -639,13 +603,18 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 .bk-footer-grid   { grid-template-columns: 2fr 1fr 1fr 1fr; }
 .bk-footer-bottom { display: flex; justify-content: space-between; align-items: center; }
 
-@media (max-width: 768px) {
-  .bk-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+/* Tablet: logo full-width top row, 3-col links below */
+@media (max-width: 900px) {
+  .bk-footer-grid                    { grid-template-columns: 1fr 1fr 1fr !important; gap: 24px !important; }
+  .bk-footer-grid > div:first-child  { grid-column: 1 / -1 !important; }
 }
 
-@media (max-width: 480px) {
-  .bk-footer-grid   { grid-template-columns: 1fr !important; }
-  .bk-footer-bottom { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
+/* Mobile: full single column */
+@media (max-width: 560px) {
+  .bk-footer-inner                   { padding: 32px 20px 24px !important; }
+  .bk-footer-grid                    { grid-template-columns: 1fr !important; gap: 20px !important; }
+  .bk-footer-grid > div:first-child  { grid-column: auto !important; }
+  .bk-footer-bottom                  { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
 }
 
 /* ─────────────────────────────────────────────────────────── */

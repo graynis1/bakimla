@@ -15,10 +15,16 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
   const { data: session } = useSession()
 
-  // Don't render on admin/salon/customer panel pages — they have their own sidebar nav
+  // Don't render on admin and salon PANEL pages — they have their own sidebar nav.
+  // /salon/[slug] is the public business profile — bottom nav should show there.
+  const SALON_PANEL = [
+    '/salon/dashboard', '/salon/calendar', '/salon/employees', '/salon/services',
+    '/salon/reviews', '/salon/customers', '/salon/stats', '/salon/gallery',
+    '/salon/profile', '/salon/holidays', '/salon/subscription', '/salon/settings',
+  ]
   if (
     pathname.startsWith('/admin') ||
-    pathname.startsWith('/salon')
+    SALON_PANEL.some(p => pathname.startsWith(p))
   ) return null
 
   const isActive = (href: string) => {
