@@ -132,7 +132,7 @@ export default function BusinessProfilePage() {
   ]
 
   return (
-    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+    <div className="bk-salon-page-wrap" style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <Header />
 
       {/* Breadcrumb */}
@@ -206,7 +206,7 @@ export default function BusinessProfilePage() {
               </div>
 
               {/* Tabs */}
-              <div style={{ display: 'flex', borderTop: '1px solid var(--line)', overflowX: 'auto', scrollbarWidth: 'none' }}>
+              <div className="bk-tab-bar" style={{ display: 'flex', borderTop: '1px solid var(--line)', overflowX: 'auto', scrollbarWidth: 'none', width: '100%' }}>
                 {TABS.map(t => {
                   const Icon = t.icon
                   return (

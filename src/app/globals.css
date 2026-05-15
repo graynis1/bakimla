@@ -101,14 +101,19 @@
 }
 
 /* ── Base ──────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* fallback for old Safari */
+  overflow-x: clip;   /* modern: clips without BFC — doesn't break position:sticky */
+}
 
 body {
   background: var(--bg);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
   padding-bottom: var(--bottom-nav-h);
-  overflow-x: hidden;
+  overflow-x: hidden; /* fallback */
+  overflow-x: clip;   /* modern */
   width: 100%;
 }
 
@@ -431,11 +436,21 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /* Prevent service rows from overflowing their card */
 .bk-pub-svc-row { max-width: 100%; box-sizing: border-box; }
 
+/* Tab bar: full width, hide scrollbar on WebKit */
+.bk-tab-bar { max-width: 100%; }
+.bk-tab-bar::-webkit-scrollbar { display: none; }
+
 /* Ensure every element on the salon page stays within its container */
-.bk-salon-main, .bk-salon-main * { box-sizing: border-box; }
-.bk-salon-main img,
-.bk-salon-main iframe,
-.bk-salon-main video { max-width: 100%; }
+.bk-salon-page-wrap, .bk-salon-page-wrap * { box-sizing: border-box; }
+.bk-salon-page-wrap img,
+.bk-salon-page-wrap iframe,
+.bk-salon-page-wrap video { max-width: 100%; }
+
+/* Every flex/grid child that holds text must be able to shrink */
+@media (max-width: 960px) {
+  .bk-salon-main > * { min-width: 0; width: 100%; }
+  .bk-salon-layout > * { min-width: 0; }
+}
 
 @media (max-width: 960px) {
   .bk-salon-layout  { grid-template-columns: 1fr !important; }
@@ -474,6 +489,16 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
   .bk-biz-header-meta { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
   .bk-biz-name        { font-size: 20px !important; word-break: break-word !important; }
   .bk-biz-header-pad  { padding: 16px !important; }
+}
+
+/* Salon page: clip overflow on mobile so content can't push viewport wide */
+/* Using max-width: 960px (same as sidebar collapse) — on desktop, position:sticky still works */
+@media (max-width: 960px) {
+  .bk-salon-page-wrap {
+    overflow-x: hidden; /* fallback */
+    overflow-x: clip;
+    width: 100%;
+  }
 }
 
 /* Ensure salon public page never causes horizontal overflow */
