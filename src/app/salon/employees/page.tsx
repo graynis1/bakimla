@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
-import { Plus, Trash2, Edit2, Clock, Scissors, Check } from 'lucide-react'
+import { Plus, Trash2, Edit2, Clock, Scissors, Check, Camera } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 
 interface ScheduleDay {
@@ -26,6 +26,7 @@ interface Employee {
   title?: string | null
   bio?: string | null
   phone?: string | null
+  avatar?: string | null
   isActive: boolean
   sortOrder: number
   schedule: ScheduleDay[]
@@ -38,9 +39,10 @@ interface EmployeeForm {
   title: string
   bio: string
   phone: string
+  photo: string
 }
 
-const EMPTY_FORM: EmployeeForm = { name: '', surname: '', title: '', bio: '', phone: '' }
+const EMPTY_FORM: EmployeeForm = { name: '', surname: '', title: '', bio: '', phone: '', photo: '' }
 const DAYS_TR = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz']
 const DAYS_FULL = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar']
 
@@ -64,7 +66,9 @@ export default function SalonEmployeesPage() {
   const [editing, setEditing] = useState<Employee | null>(null)
   const [form, setForm] = useState<EmployeeForm>(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [limit, setLimit] = useState<number | null>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   // Schedule modal
   const [scheduleEmp, setScheduleEmp] = useState<Employee | null>(null)
@@ -102,8 +106,22 @@ export default function SalonEmployeesPage() {
 
   function openEdit(emp: Employee) {
     setEditing(emp)
-    setForm({ name: emp.name, surname: emp.surname, title: emp.title || '', bio: emp.bio || '', phone: emp.phone || '' })
+    setForm({ name: emp.name, surname: emp.surname, title: emp.title || '', bio: emp.bio || '', phone: emp.phone || '', photo: emp.avatar || '' })
     setShowModal(true)
+  }
+
+  async function handlePhotoUpload(file: File) {
+    setUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (data.success) setForm((prev) => ({ ...prev, photo: data.url }))
+      else toast.error(data.error || 'Yükleme başarısız')
+    } finally {
+      setUploading(false)
+    }
   }
 
   async function handleSave() {
@@ -114,7 +132,7 @@ export default function SalonEmployeesPage() {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, avatar: form.photo }),
       })
       const data = await res.json()
       if (data.success) {
@@ -253,8 +271,8 @@ export default function SalonEmployeesPage() {
               <div key={emp.id} style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 16, padding: '16px 20px' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--brand)', fontSize: 20, flexShrink: 0 }}>
-                      {emp.name[0]}
+                    <div style={{ width: 52, height: 52, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', background: emp.avatar ? `url(${emp.avatar}) center/cover` : 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--brand)', fontSize: 20 }}>
+                      {!emp.avatar && emp.name[0]}
                     </div>
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 15 }}>{emp.name} {emp.surname}</div>
@@ -320,6 +338,46 @@ export default function SalonEmployeesPage() {
           <div style={{ background: 'white', borderRadius: 20, padding: 28, maxWidth: 480, width: '100%' }} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ fontWeight: 800, marginBottom: 20, fontSize: 18 }}>{editing ? 'Çalışanı Düzenle' : 'Yeni Çalışan'}</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {/* Photo upload */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 4 }}>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  style={{ display: 'none' }}
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(f); e.target.value = '' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => photoInputRef.current?.click()}
+                  disabled={uploading}
+                  style={{ position: 'relative', width: 80, height: 80, borderRadius: '50%', border: '2px dashed var(--line)', background: form.photo ? `url(${form.photo}) center/cover` : 'var(--surface-2)', cursor: uploading ? 'not-allowed' : 'pointer', overflow: 'hidden', flexShrink: 0 }}
+                >
+                  {!form.photo && !uploading && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 4 }}>
+                      <Camera size={20} color="var(--muted-color)" />
+                      <span style={{ fontSize: 10, color: 'var(--muted-color)', fontWeight: 600 }}>Fotoğraf</span>
+                    </div>
+                  )}
+                  {uploading && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ width: 20, height: 20, border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.7s linear infinite', display: 'block' }} />
+                    </div>
+                  )}
+                  {form.photo && !uploading && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0)', transition: 'background 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="bk-photo-overlay">
+                      <Camera size={18} color="white" style={{ opacity: 0 }} className="bk-photo-icon" />
+                    </div>
+                  )}
+                </button>
+              </div>
+              {form.photo && (
+                <div style={{ textAlign: 'center', marginTop: -8 }}>
+                  <button type="button" onClick={() => setForm((p) => ({ ...p, photo: '' }))} style={{ fontSize: 12, color: '#b42318', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>
+                    Fotoğrafı Kaldır
+                  </button>
+                </div>
+              )}
               <div className="bk-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>Ad</label>

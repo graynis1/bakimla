@@ -26,6 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       title: data.title || null,
       bio: data.bio || null,
       phone: data.phone || null,
+      avatar: data.avatar !== undefined ? (data.avatar || null) : undefined,
       isActive: data.isActive !== undefined ? data.isActive : undefined,
     },
   })

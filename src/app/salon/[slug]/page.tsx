@@ -284,8 +284,8 @@ export default function BusinessProfilePage() {
                     <div className="bk-emp-preview-grid" style={{ display: 'grid', gap: 10 }}>
                       {business.employees.slice(0, 4).map((emp: any) => (
                         <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: '1px solid var(--line)', borderRadius: 14 }}>
-                          <div style={{ width: 42, height: 42, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 16, flexShrink: 0 }}>
-                            {!emp.photo && emp.name[0]}
+                          <div style={{ width: 42, height: 42, borderRadius: '50%', background: emp.avatar ? `url(${emp.avatar}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 16, flexShrink: 0 }}>
+                            {!emp.avatar && emp.name[0]}
                           </div>
                           <div style={{ minWidth: 0 }}>
                             <div style={{ fontWeight: 700, fontSize: 13, wordBreak: 'break-word' }}>{emp.name} {emp.surname}</div>
@@ -356,8 +356,8 @@ export default function BusinessProfilePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {business.employees?.map((emp: any) => (
                     <div key={emp.id} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: 16, border: '1px solid var(--line)', borderRadius: 16 }}>
-                      <div style={{ width: 60, height: 60, borderRadius: '50%', background: emp.photo ? `url(${emp.photo}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 22, flexShrink: 0 }}>
-                        {!emp.photo && emp.name[0]}
+                      <div style={{ width: 60, height: 60, borderRadius: '50%', background: emp.avatar ? `url(${emp.avatar}) center/cover` : 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'white', fontSize: 22, flexShrink: 0 }}>
+                        {!emp.avatar && emp.name[0]}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: 700, fontSize: 15, wordBreak: 'break-word' }}>{emp.name} {emp.surname}</div>

@@ -100,6 +100,8 @@
   --chart-5: #f1ede6;
 }
 
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Base ──────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
