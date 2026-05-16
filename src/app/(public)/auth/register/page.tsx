@@ -7,11 +7,24 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cityList, getDistricts } from '@/lib/locations'
 import { categoryLabels } from '@/lib/utils'
 
 const CATEGORIES = Object.entries(categoryLabels)
+
+const selectStyle: React.CSSProperties = {
+  width: '100%',
+  height: '40px',
+  padding: '0 12px',
+  borderRadius: '8px',
+  border: '1px solid #e5e7eb',
+  background: 'white',
+  fontSize: '14px',
+  color: '#111',
+  appearance: 'auto',
+  cursor: 'pointer',
+  outline: 'none',
+}
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -24,10 +37,11 @@ export default function RegisterPage() {
   })
 
   function handleChange(field: string, value: string) {
-    setForm((prev) => ({ ...prev, [field]: value }))
     if (field === 'city') {
       setSelectedCity(value)
       setForm((prev) => ({ ...prev, city: value, district: '' }))
+    } else {
+      setForm((prev) => ({ ...prev, [field]: value }))
     }
   }
 
@@ -64,7 +78,7 @@ export default function RegisterPage() {
           <p className="text-sm mt-1" style={{ color: 'var(--muted-color)' }}>Yeni hesap oluşturun</p>
         </div>
 
-        <div className="bg-white rounded-[18px] border p-8" style={{ borderColor: 'var(--line)', boxShadow: 'var(--bk-shadow)' }}>
+        <div className="bg-white rounded-[18px] border p-6 sm:p-8" style={{ borderColor: 'var(--line)', boxShadow: 'var(--bk-shadow)' }}>
           <div className="flex gap-2 mb-6 bg-[#f1ede6] rounded-xl p-1">
             {(['customer', 'business'] as const).map((t) => (
               <button
@@ -82,7 +96,7 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>Ad</Label>
                 <Input className="mt-1" value={form.name} onChange={(e) => handleChange('name', e.target.value)} required />
@@ -109,43 +123,50 @@ export default function RegisterPage() {
                 </div>
                 <div>
                   <Label>Kategori</Label>
-                  <Select onValueChange={(v: string | null) => { if (v) handleChange('category', v) }}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="Kategori seçiniz" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {CATEGORIES.map(([key, label]) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    style={selectStyle}
+                    className="mt-1"
+                    value={form.category}
+                    onChange={(e) => handleChange('category', e.target.value)}
+                    required
+                  >
+                    <option value="">Kategori seçiniz</option>
+                    {CATEGORIES.map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label>Şehir</Label>
-                    <Select onValueChange={(v: string | null) => { if (v) handleChange('city', v) }}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Şehir" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {cityList.map((c) => (
-                          <SelectItem key={c} value={c}>{c}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label>Şehir / İl</Label>
+                    <select
+                      style={selectStyle}
+                      className="mt-1"
+                      value={form.city}
+                      onChange={(e) => handleChange('city', e.target.value)}
+                      required
+                    >
+                      <option value="">İl seçiniz</option>
+                      {cityList.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <Label>İlçe</Label>
-                    <Select onValueChange={(v: string | null) => { if (v) handleChange('district', v) }} disabled={!selectedCity}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="İlçe" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getDistricts(selectedCity).map((d) => (
-                          <SelectItem key={d} value={d}>{d}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <select
+                      style={{ ...selectStyle, opacity: selectedCity ? 1 : 0.5 }}
+                      className="mt-1"
+                      value={form.district}
+                      onChange={(e) => handleChange('district', e.target.value)}
+                      disabled={!selectedCity}
+                      required
+                    >
+                      <option value="">İlçe seçiniz</option>
+                      {getDistricts(selectedCity).map((d) => (
+                        <option key={d} value={d}>{d}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div>
@@ -155,7 +176,7 @@ export default function RegisterPage() {
               </>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label>Şifre</Label>
                 <Input className="mt-1" type="password" value={form.password} onChange={(e) => handleChange('password', e.target.value)} required />

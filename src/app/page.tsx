@@ -7,6 +7,7 @@ import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import BusinessCard from '@/components/shared/BusinessCard'
 import { ArrowRight, Search } from 'lucide-react'
+import { cityList } from '@/lib/locations'
 
 const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=900&h=600&auto=format&fit=crop&q=80'
 
@@ -166,17 +167,17 @@ export default async function HomePage() {
                   <input
                     name="query"
                     placeholder="Hizmet veya kategori ara..."
-                    style={{ flex: 1, border: 0, outline: 'none', fontSize: 13.5, background: 'transparent', color: 'var(--text)', minWidth: 0 }}
+                    style={{ flex: 1, border: 0, outline: 'none', fontSize: 16, background: 'transparent', color: 'var(--text)', minWidth: 0 }}
                   />
                 </div>
                 <div className="bk-search-divider" style={{ width: 1, background: 'var(--line)', margin: '12px 0' }} />
                 <div className="bk-search-city-wrap" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', height: 52, gap: 6 }}>
                   <select
                     name="city"
-                    style={{ border: 0, outline: 'none', fontSize: 13, background: 'transparent', color: 'var(--text)', fontFamily: 'inherit', cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none' }}
+                    style={{ border: 0, outline: 'none', fontSize: 14, background: 'transparent', color: 'var(--text)', fontFamily: 'inherit', cursor: 'pointer', appearance: 'none', WebkitAppearance: 'none' }}
                   >
                     <option value="">Konum</option>
-                    {['Ankara', 'İstanbul', 'İzmir', 'Bursa', 'Antalya'].map((c) => (
+                    {cityList.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>

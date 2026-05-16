@@ -265,23 +265,38 @@ button:not(:disabled):not([style*="background: none"]):not([style*="background:n
 /*  SEARCH BAR (hero + search page)                           */
 /* ─────────────────────────────────────────────────────────── */
 
-@media (max-width: 560px) {
+@media (max-width: 768px) {
   .bk-search-form {
     flex-direction: column !important;
+    max-width: 100% !important;
   }
   .bk-search-form .bk-search-divider {
     display: none !important;
   }
-  .bk-search-form .bk-search-input-wrap,
+  .bk-search-form .bk-search-input-wrap {
+    border-bottom: 1px solid var(--line) !important;
+    height: 56px !important;
+    width: 100% !important;
+    padding: 0 18px !important;
+  }
+  .bk-search-form .bk-search-input-wrap input {
+    font-size: 16px !important;
+  }
   .bk-search-form .bk-search-city-wrap {
     border-bottom: 1px solid var(--line) !important;
-    height: 50px !important;
+    height: 52px !important;
+    width: 100% !important;
+    padding: 0 18px !important;
+  }
+  .bk-search-form .bk-search-city-wrap select {
+    font-size: 16px !important;
     width: 100% !important;
   }
   .bk-search-form .bk-search-btn {
-    height: 50px !important;
-    border-radius: 0 0 12px 12px !important;
+    height: 52px !important;
+    border-radius: 0 0 14px 14px !important;
     width: 100% !important;
+    font-size: 15px !important;
   }
 }
 
