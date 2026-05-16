@@ -43,6 +43,14 @@ function SearchContent() {
   const [showFilters, setShowFilters] = useState(false)
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const [query, setQuery] = useState(searchParams.get('query') || '')
   const [city, setCity] = useState(searchParams.get('city') || '')
@@ -129,6 +137,67 @@ function SearchContent() {
 
   const isMapMode = viewMode === 'map'
 
+  const filterContent = (
+    <>
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>KATEGORİ</div>
+        {CATEGORIES.map(([key, label]) => (
+          <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', fontSize: 14, cursor: 'pointer' }}>
+            <input type="radio" name="category" value={key} checked={category === key} onChange={() => setCategory(category === key ? '' : key)} style={{ accentColor: 'var(--gold)' }} />
+            {label}
+          </label>
+        ))}
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>ŞEHİR</div>
+        <select value={city} onChange={(e) => { setCity(e.target.value); setDistrict('') }} style={inp}>
+          <option value="">Tüm şehirler</option>
+          {cityList.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
+
+      {city && (
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>İLÇE</div>
+          <select value={district} onChange={(e) => setDistrict(e.target.value)} style={inp}>
+            <option value="">Tüm ilçeler</option>
+            {getDistricts(city).map((d) => <option key={d} value={d}>{d}</option>)}
+          </select>
+        </div>
+      )}
+
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>MİN. PUAN</div>
+        {[4, 3, 2].map((r) => (
+          <label key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 14, cursor: 'pointer' }}>
+            <input type="radio" name="minRating" value={r} checked={minRating === String(r)} onChange={() => setMinRating(minRating === String(r) ? '' : String(r))} style={{ accentColor: 'var(--gold)' }} />
+            {r}★ ve üzeri
+          </label>
+        ))}
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>SIRALAMA</div>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={inp}>
+          <option value="rating">En Yüksek Puan</option>
+          <option value="reviewCount">En Fazla Yorum</option>
+          <option value="newest">En Yeni</option>
+          {userCoords && <option value="proximity">📍 En Yakın</option>}
+        </select>
+      </div>
+
+      <button onClick={() => { fetchBusinesses(1); if (isMobile) setShowFilters(false) }} style={{ width: '100%', height: 44, borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, border: 0, cursor: 'pointer', marginBottom: 8 }}>
+        Filtrele
+      </button>
+      {(city || district || category || minRating) && (
+        <button onClick={() => { setCity(''); setDistrict(''); setCategory(''); setMinRating(''); setTimeout(() => fetchBusinesses(1), 50); if (isMobile) setShowFilters(false) }} style={{ width: '100%', height: 40, borderRadius: 12, background: 'transparent', color: 'var(--muted-color)', fontWeight: 600, fontSize: 13, border: '1px solid var(--line)', cursor: 'pointer' }}>
+          Temizle
+        </button>
+      )}
+    </>
+  )
+
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
       <Header />
@@ -190,70 +259,30 @@ function SearchContent() {
           </div>
         </div>
 
-        {/* Filter sidebar + results grid */}
-        <div className="bk-search-layout" style={{ display: 'grid', gridTemplateColumns: showFilters ? '220px 1fr' : '1fr', gap: 20 }}>
+        {/* Mobile filter bottom sheet */}
+        {showFilters && isMobile && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 600, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)' }} onClick={() => setShowFilters(false)} />
+            <div style={{ position: 'relative', background: 'white', borderRadius: '20px 20px 0 0', padding: '20px 20px 32px', maxHeight: '88vh', overflowY: 'auto' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <div style={{ fontWeight: 800, fontSize: 16 }}>Filtreler</div>
+                <button onClick={() => setShowFilters(false)} style={{ border: 0, background: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: 'var(--muted-color)' }}>
+                  <X size={20} />
+                </button>
+              </div>
+              {filterContent}
+            </div>
+          </div>
+        )}
 
-          {/* Sidebar */}
-          {showFilters && (
+        {/* Filter sidebar + results grid */}
+        <div className="bk-search-layout" style={{ display: 'grid', gridTemplateColumns: (showFilters && !isMobile) ? '220px 1fr' : '1fr', gap: 20 }}>
+
+          {/* Desktop sidebar */}
+          {showFilters && !isMobile && (
             <div className="bk-filter-sidebar" style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 20, height: 'fit-content', position: 'sticky', top: 80 }}>
               <div style={{ fontWeight: 800, fontSize: 15, marginBottom: 20 }}>Filtreler</div>
-
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>KATEGORİ</div>
-                {CATEGORIES.map(([key, label]) => (
-                  <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', fontSize: 14, cursor: 'pointer' }}>
-                    <input type="radio" name="category" value={key} checked={category === key} onChange={() => setCategory(category === key ? '' : key)} style={{ accentColor: 'var(--gold)' }} />
-                    {label}
-                  </label>
-                ))}
-              </div>
-
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>ŞEHİR</div>
-                <select value={city} onChange={(e) => { setCity(e.target.value); setDistrict('') }} style={inp}>
-                  <option value="">Tüm şehirler</option>
-                  {cityList.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-
-              {city && (
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>İLÇE</div>
-                  <select value={district} onChange={(e) => setDistrict(e.target.value)} style={inp}>
-                    <option value="">Tüm ilçeler</option>
-                    {getDistricts(city).map((d) => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-              )}
-
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>MİN. PUAN</div>
-                {[4, 3, 2].map((r) => (
-                  <label key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', fontSize: 14, cursor: 'pointer' }}>
-                    <input type="radio" name="minRating" value={r} checked={minRating === String(r)} onChange={() => setMinRating(minRating === String(r) ? '' : String(r))} style={{ accentColor: 'var(--gold)' }} />
-                    {r}★ ve üzeri
-                  </label>
-                ))}
-              </div>
-
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontWeight: 700, fontSize: 12, marginBottom: 10, color: 'var(--muted-color)', letterSpacing: '0.5px' }}>SIRALAMA</div>
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={inp}>
-                  <option value="rating">En Yüksek Puan</option>
-                  <option value="reviewCount">En Fazla Yorum</option>
-                  <option value="newest">En Yeni</option>
-                  {userCoords && <option value="proximity">📍 En Yakın</option>}
-                </select>
-              </div>
-
-              <button onClick={() => fetchBusinesses(1)} style={{ width: '100%', height: 44, borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, border: 0, cursor: 'pointer', marginBottom: 8 }}>
-                Filtrele
-              </button>
-              {(city || district || category || minRating) && (
-                <button onClick={() => { setCity(''); setDistrict(''); setCategory(''); setMinRating(''); setTimeout(() => fetchBusinesses(1), 50) }} style={{ width: '100%', height: 40, borderRadius: 12, background: 'transparent', color: 'var(--muted-color)', fontWeight: 600, fontSize: 13, border: '1px solid var(--line)', cursor: 'pointer' }}>
-                  Temizle
-                </button>
-              )}
+              {filterContent}
             </div>
           )}
 
