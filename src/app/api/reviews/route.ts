@@ -49,6 +49,23 @@ export async function POST(req: NextRequest) {
       return r
     })
 
+    // Notify salon owner
+    const [business, reviewer] = await Promise.all([
+      prisma.business.findUnique({ where: { id: businessId }, select: { ownerId: true, name: true } }),
+      prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true, surname: true } }),
+    ])
+    if (business) {
+      await prisma.notification.create({
+        data: {
+          userId: business.ownerId,
+          title: 'Yeni Yorum',
+          message: `${reviewer ? `${reviewer.name} ${reviewer.surname}` : 'Bir müşteri'} işletmenizi ${rating} yıldızla değerlendirdi.`,
+          type: 'REVIEW_RECEIVED',
+          relatedId: review.id,
+        },
+      })
+    }
+
     return NextResponse.json({ success: true, data: review })
   } catch (err) {
     console.error(err)

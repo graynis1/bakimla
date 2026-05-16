@@ -43,6 +43,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const dateLabel = format(new Date(appointment.date), 'd MMMM yyyy', { locale: tr })
 
     if (status === 'CANCELLED') {
+      // Notify customer
       await prisma.notification.create({
         data: {
           userId: appointment.customerId,
@@ -52,6 +53,18 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           relatedId: appointment.id,
         },
       })
+      // Notify salon owner if customer or admin cancelled
+      if (isCustomer || isAdmin) {
+        await prisma.notification.create({
+          data: {
+            userId: appointment.business.ownerId,
+            title: 'Randevu İptal Edildi',
+            message: `${appointment.customer.name} ${appointment.customer.surname}, ${dateLabel} ${appointment.startTime} randevusunu iptal etti.`,
+            type: 'APPOINTMENT_CANCELLED',
+            relatedId: appointment.id,
+          },
+        })
+      }
       sendEmail({
         to: appointment.customer.email,
         subject: `Bakımla – Randevunuz İptal Edildi`,

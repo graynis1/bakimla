@@ -115,9 +115,33 @@ export async function POST(req: NextRequest) {
       return appointment
     })
 
-    // Send emails async (don't block response)
+    // Notify salon owner in-app
     const customer = await prisma.user.findUnique({ where: { id: session.user.id }, select: { name: true, surname: true, email: true, phone: true } })
     const businessOwner = await prisma.user.findUnique({ where: { id: business.ownerId }, select: { email: true } })
+
+    await prisma.notification.create({
+      data: {
+        userId: business.ownerId,
+        title: 'Yeni Randevu Talebi',
+        message: `${customer ? `${customer.name} ${customer.surname}` : 'Bir müşteri'} ${format(date, 'dd.MM.yyyy')} tarihinde ${startTime} için ${service.name} randevusu oluşturdu.`,
+        type: 'APPOINTMENT_CONFIRMED',
+        relatedId: result.id,
+      },
+    })
+
+    // Notify admins in-app
+    const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+    if (admins.length > 0) {
+      await prisma.notification.createMany({
+        data: admins.map((a) => ({
+          userId: a.id,
+          title: 'Yeni Randevu',
+          message: `${business.name} işletmesine yeni randevu talebi geldi.`,
+          type: 'APPOINTMENT_CONFIRMED' as const,
+          relatedId: result.id,
+        })),
+      })
+    }
     const dateLabel = format(date, 'd MMMM yyyy EEEE', { locale: tr })
 
     if (customer) {

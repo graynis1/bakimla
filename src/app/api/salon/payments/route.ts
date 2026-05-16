@@ -43,5 +43,19 @@ export async function POST(req: NextRequest) {
     },
   })
 
+  // Notify all admins about pending payment
+  const admins = await prisma.user.findMany({ where: { role: 'ADMIN' }, select: { id: true } })
+  if (admins.length > 0) {
+    await prisma.notification.createMany({
+      data: admins.map((a) => ({
+        userId: a.id,
+        title: 'Yeni Ödeme Talebi',
+        message: `${business.name} işletmesi ${plan.name} paketi için ödeme gönderdi. Onay bekliyor.`,
+        type: 'PAYMENT_APPROVED' as const,
+        relatedId: payment.id,
+      })),
+    })
+  }
+
   return NextResponse.json({ success: true, data: payment })
 }
