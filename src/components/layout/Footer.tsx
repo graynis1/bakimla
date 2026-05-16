@@ -58,7 +58,7 @@ export default function Footer() {
         </div>
 
         <div className="bk-footer-bottom" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, fontSize: 13, color: 'rgba(255,255,255,0.5)', gap: 8 }}>
-          <span>© 2025 Bakımla. Tüm hakları saklıdır.</span>
+          <span>© {new Date().getFullYear()} Bakımla. Tüm hakları saklıdır.</span>
           <span>Türkiye genelinde hizmet vermektedir.</span>
         </div>
       </div>
