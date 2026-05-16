@@ -14,9 +14,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const configs = await prisma.systemConfig.findMany({
+    where: { key: { in: ['reminder_enabled', 'reminder_hours_before'] } },
+  })
+  const cfg = Object.fromEntries(configs.map((c) => [c.key, c.value]))
+  if (cfg.reminder_enabled === 'false') {
+    return NextResponse.json({ success: true, sent: 0, note: 'reminders disabled' })
+  }
+  const hoursBefore = Math.max(1, Number(cfg.reminder_hours_before ?? '24'))
+
   const now = new Date()
-  const windowStart = addHours(now, 23)
-  const windowEnd = addHours(now, 25)
+  const windowStart = addHours(now, hoursBefore - 1)
+  const windowEnd = addHours(now, hoursBefore + 1)
 
   const appointments = await prisma.appointment.findMany({
     where: {

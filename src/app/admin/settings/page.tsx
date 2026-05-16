@@ -56,12 +56,23 @@ const CONTENT_DEFAULTS: SiteContent = {
   contact_whatsapp: '',
 }
 
-type Tab = 'smtp' | 'content'
+interface NotifSettings {
+  reminder_enabled: string
+  reminder_hours_before: string
+}
+
+const NOTIF_DEFAULTS: NotifSettings = {
+  reminder_enabled: 'true',
+  reminder_hours_before: '24',
+}
+
+type Tab = 'smtp' | 'content' | 'notifications'
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('smtp')
   const [smtp, setSmtp] = useState<SmtpSettings>(SMTP_DEFAULTS)
   const [content, setContent] = useState<SiteContent>(CONTENT_DEFAULTS)
+  const [notif, setNotif] = useState<NotifSettings>(NOTIF_DEFAULTS)
   const [testEmail, setTestEmail] = useState('')
   const [saving, setSaving] = useState(false)
   const [testing, setTesting] = useState(false)
@@ -72,6 +83,7 @@ export default function AdminSettingsPage() {
       .then((data) => {
         setSmtp((prev) => ({ ...prev, ...data }))
         setContent((prev) => ({ ...prev, ...data }))
+        setNotif((prev) => ({ ...prev, ...data }))
       })
   }, [])
 
@@ -155,9 +167,22 @@ export default function AdminSettingsPage() {
     )
   }
 
+  async function handleSaveNotif() {
+    setSaving(true)
+    const res = await fetch('/api/admin/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(notif),
+    })
+    setSaving(false)
+    if (res.ok) toast.success('Bildirim ayarları kaydedildi')
+    else toast.error('Kaydedilemedi')
+  }
+
   const tabs: { key: Tab; label: string }[] = [
     { key: 'smtp', label: 'E-posta / SMTP' },
     { key: 'content', label: 'Site İçeriği' },
+    { key: 'notifications', label: 'Bildirimler' },
   ]
 
   return (
@@ -312,6 +337,101 @@ export default function AdminSettingsPage() {
               style={{ height: 46, padding: '0 32px', borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, border: 0, cursor: saving ? 'not-allowed' : 'pointer' }}>
               {saving ? 'Kaydediliyor...' : 'Tüm İçeriği Kaydet'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Notifications tab */}
+      {activeTab === 'notifications' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 20, padding: 28 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+              <div>
+                <h2 style={{ fontWeight: 800, fontSize: 16, marginBottom: 4 }}>Randevu Hatırlatma Mailleri</h2>
+                <p style={{ fontSize: 13, color: 'var(--muted-color)', margin: 0 }}>
+                  Onaylı randevular için müşterilere otomatik hatırlatma maili gönderim ayarları.
+                </p>
+              </div>
+              <button onClick={handleSaveNotif} disabled={saving}
+                style={{ height: 42, padding: '0 22px', borderRadius: 12, background: 'var(--brand)', color: 'white', fontWeight: 700, fontSize: 14, border: 0, cursor: saving ? 'not-allowed' : 'pointer', flexShrink: 0 }}>
+                {saving ? 'Kaydediliyor...' : 'Kaydet'}
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Enable toggle */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', background: 'var(--surface-2)', borderRadius: 14 }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>Hatırlatma Maili Gönderimi</div>
+                  <div style={{ fontSize: 13, color: 'var(--muted-color)', marginTop: 2 }}>
+                    {notif.reminder_enabled === 'true' ? 'Aktif — müşterilere hatırlatma maili gönderiliyor' : 'Pasif — hiç mail gönderilmiyor'}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setNotif({ ...notif, reminder_enabled: notif.reminder_enabled === 'true' ? 'false' : 'true' })}
+                  style={{
+                    width: 52, height: 28, borderRadius: 99, border: 'none', cursor: 'pointer', flexShrink: 0,
+                    background: notif.reminder_enabled === 'true' ? 'var(--brand)' : '#d1d5db',
+                    position: 'relative', transition: 'background 0.2s',
+                  }}
+                >
+                  <span style={{
+                    position: 'absolute', top: 3, width: 22, height: 22, borderRadius: '50%', background: 'white',
+                    left: notif.reminder_enabled === 'true' ? 27 : 3, transition: 'left 0.2s', display: 'block',
+                  }} />
+                </button>
+              </div>
+
+              {/* Hours before */}
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+                  Randevudan kaç saat önce gönderilsin?
+                </label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <input
+                    type="number"
+                    min="1"
+                    max="72"
+                    value={notif.reminder_hours_before}
+                    onChange={(e) => setNotif({ ...notif, reminder_hours_before: e.target.value })}
+                    disabled={notif.reminder_enabled !== 'true'}
+                    style={{ width: 100, padding: '10px 14px', border: '1px solid var(--line)', borderRadius: 12, fontSize: 16, fontWeight: 700, textAlign: 'center', fontFamily: 'inherit', opacity: notif.reminder_enabled !== 'true' ? 0.4 : 1 }}
+                  />
+                  <span style={{ fontSize: 14, color: 'var(--muted-color)' }}>saat önce</span>
+                </div>
+                <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {[12, 24, 48, 72].map((h) => (
+                    <button
+                      key={h}
+                      type="button"
+                      onClick={() => setNotif({ ...notif, reminder_hours_before: String(h) })}
+                      disabled={notif.reminder_enabled !== 'true'}
+                      style={{
+                        padding: '5px 14px', borderRadius: 99, border: `1px solid ${notif.reminder_hours_before === String(h) ? 'var(--brand)' : 'var(--line)'}`,
+                        background: notif.reminder_hours_before === String(h) ? 'var(--brand)' : 'white',
+                        color: notif.reminder_hours_before === String(h) ? 'white' : 'var(--text)',
+                        fontWeight: 600, fontSize: 13, cursor: notif.reminder_enabled !== 'true' ? 'not-allowed' : 'pointer',
+                        opacity: notif.reminder_enabled !== 'true' ? 0.4 : 1,
+                      }}
+                    >
+                      {h} saat
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* How it works info card */}
+          <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 20, padding: 24 }}>
+            <div style={{ fontWeight: 700, fontSize: 14, color: '#1d4ed8', marginBottom: 10 }}>Nasıl Çalışır?</div>
+            <div style={{ fontSize: 13, color: '#1e40af', lineHeight: 1.7 }}>
+              <div>• Hatırlatma maili sistemi, her saat <strong>/api/cron/reminders</strong> endpoint&apos;ine dışarıdan (cron-job.org vb.) istek atılarak tetiklenir.</div>
+              <div>• Bu endpoint, ayarlanan saatten <strong>±1 saat</strong> aralığında randevusu olan müşterilere mail gönderir.</div>
+              <div>• Örneğin 24 saat seçiliyse; cron her saatte bir çalışır ve randevusu 23–25 saat sonrasında olan herkese mail gitar.</div>
+              <div style={{ marginTop: 8 }}>• <strong>Gerekli:</strong> Sunucunuzda <code style={{ background: 'rgba(0,0,0,0.08)', padding: '1px 6px', borderRadius: 4 }}>CRON_SECRET</code> env değişkeni tanımlı olmalı ve cron servisi bu değeri <code style={{ background: 'rgba(0,0,0,0.08)', padding: '1px 6px', borderRadius: 4 }}>x-cron-secret</code> header&apos;ı ile göndermelidir.</div>
+            </div>
           </div>
         </div>
       )}
