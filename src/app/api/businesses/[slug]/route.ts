@@ -34,7 +34,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ slu
       return NextResponse.json({ success: false, error: 'İşletme bulunamadı' }, { status: 404 })
     }
 
-    return NextResponse.json({ success: true, data: business })
+    const rawFeatures = business.subscription?.plan?.features
+    const features = (Array.isArray(rawFeatures) || !rawFeatures)
+      ? {} as { hasGallery?: boolean }
+      : rawFeatures as { hasGallery?: boolean }
+
+    const data = { ...business, gallery: features.hasGallery !== false ? business.gallery : [] }
+
+    return NextResponse.json({ success: true, data })
   } catch (err) {
     console.error(err)
     return NextResponse.json({ success: false, error: 'Bir hata oluştu' }, { status: 500 })

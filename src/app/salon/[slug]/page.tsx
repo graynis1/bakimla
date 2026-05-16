@@ -123,12 +123,18 @@ export default function BusinessProfilePage() {
   const canBook = business.subscription?.status === 'ACTIVE' || business.subscription?.status === 'TRIAL'
   const mapQuery = encodeURIComponent(`${business.address}, ${business.district}, ${business.city}`)
 
+  const rawFeatures = business.subscription?.plan?.features
+  const planFeatures = (Array.isArray(rawFeatures) || !rawFeatures)
+    ? {} as { hasGallery?: boolean }
+    : rawFeatures as { hasGallery?: boolean }
+  const hasGallery = planFeatures.hasGallery !== false
+
   const TABS = [
     { key: 'overview',   label: 'Genel Bakış',                                    icon: Home },
     { key: 'services',   label: `Hizmetler (${business.services?.length ?? 0})`,  icon: LayoutGrid },
     { key: 'employees',  label: `Çalışanlar (${business.employees?.length ?? 0})`,icon: Users },
     { key: 'reviews',    label: `Yorumlar (${business.reviewCount})`,             icon: MessageCircle },
-    { key: 'photos',     label: `Fotoğraflar (${business.gallery?.length ?? 0})`, icon: Camera },
+    ...(hasGallery ? [{ key: 'photos', label: `Fotoğraflar (${business.gallery?.length ?? 0})`, icon: Camera }] : []),
   ]
 
   return (

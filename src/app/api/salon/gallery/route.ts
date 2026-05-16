@@ -28,6 +28,32 @@ export async function POST(req: NextRequest) {
   const business = await getBusiness(session.user.id)
   if (!business) return NextResponse.json({ success: false, error: 'İşletme bulunamadı' }, { status: 404 })
 
+  const sub = await prisma.subscription.findFirst({
+    where: { businessId: business.id },
+    include: { plan: true },
+  })
+  const rawFeatures = sub?.plan?.features
+  const features = (Array.isArray(rawFeatures) || !rawFeatures)
+    ? {} as { hasGallery?: boolean; maxGallery?: number | null }
+    : rawFeatures as { hasGallery?: boolean; maxGallery?: number | null }
+
+  if (features.hasGallery === false) {
+    return NextResponse.json(
+      { success: false, error: 'Paketiniz galeri özelliğini içermiyor. Üst pakete geçin.' },
+      { status: 403 },
+    )
+  }
+
+  if (features.maxGallery && features.maxGallery > 0) {
+    const count = await prisma.galleryImage.count({ where: { businessId: business.id } })
+    if (count >= features.maxGallery) {
+      return NextResponse.json(
+        { success: false, error: `Galeri limitinize ulaştınız (${features.maxGallery} fotoğraf). Üst pakete geçin.` },
+        { status: 400 },
+      )
+    }
+  }
+
   const { url, caption } = await req.json()
   if (!url) return NextResponse.json({ success: false, error: 'URL zorunludur' }, { status: 400 })
 

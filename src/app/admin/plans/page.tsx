@@ -2,8 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2 } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
+
+interface PlanFeatures {
+  hasGallery?: boolean
+  maxGallery?: number | null
+  canHideReviews?: boolean
+  displayList?: string[]
+}
 
 interface Plan {
   id: string
@@ -11,7 +18,7 @@ interface Plan {
   maxEmployees: number
   monthlyPrice: number
   yearlyPrice: number
-  features: string[]
+  features: PlanFeatures | string[]
   isActive: boolean
 }
 
@@ -20,10 +27,34 @@ interface PlanForm {
   maxEmployees: string
   monthlyPrice: string
   yearlyPrice: string
-  features: string
+  hasGallery: boolean
+  maxGallery: string
+  canHideReviews: boolean
+  displayList: string
 }
 
-const EMPTY: PlanForm = { name: '', maxEmployees: '', monthlyPrice: '', yearlyPrice: '', features: '' }
+const EMPTY: PlanForm = {
+  name: '', maxEmployees: '', monthlyPrice: '', yearlyPrice: '',
+  hasGallery: true, maxGallery: '', canHideReviews: true, displayList: '',
+}
+
+function parseFeaturesForForm(features: PlanFeatures | string[]): Pick<PlanForm, 'hasGallery' | 'maxGallery' | 'canHideReviews' | 'displayList'> {
+  if (Array.isArray(features)) {
+    return { hasGallery: true, maxGallery: '', canHideReviews: true, displayList: features.join(', ') }
+  }
+  const f = features ?? {}
+  return {
+    hasGallery: f.hasGallery !== false,
+    maxGallery: f.maxGallery ? String(f.maxGallery) : '',
+    canHideReviews: f.canHideReviews !== false,
+    displayList: Array.isArray(f.displayList) ? f.displayList.join(', ') : '',
+  }
+}
+
+function getDisplayList(p: Plan): string[] {
+  if (Array.isArray(p.features)) return p.features
+  return p.features?.displayList ?? []
+}
 
 export default function AdminPlansPage() {
   const [plans, setPlans] = useState<Plan[]>([])
@@ -55,7 +86,7 @@ export default function AdminPlansPage() {
       maxEmployees: String(p.maxEmployees),
       monthlyPrice: String(p.monthlyPrice),
       yearlyPrice: String(p.yearlyPrice),
-      features: Array.isArray(p.features) ? p.features.join(', ') : '',
+      ...parseFeaturesForForm(p.features),
     })
     setShowModal(true)
   }
@@ -65,12 +96,18 @@ export default function AdminPlansPage() {
     try {
       const method = editing ? 'PATCH' : 'POST'
       const url = editing ? `/api/admin/plans/${editing.id}` : '/api/admin/plans'
+      const features: PlanFeatures = {
+        hasGallery: form.hasGallery,
+        maxGallery: form.maxGallery ? Number(form.maxGallery) : null,
+        canHideReviews: form.canHideReviews,
+        displayList: form.displayList.split(',').map((f) => f.trim()).filter(Boolean),
+      }
       const payload = {
         name: form.name,
         maxEmployees: Number(form.maxEmployees),
         monthlyPrice: Number(form.monthlyPrice),
         yearlyPrice: Number(form.yearlyPrice),
-        features: form.features.split(',').map((f) => f.trim()).filter(Boolean),
+        features,
       }
       const res = await fetch(url, {
         method,
@@ -101,6 +138,25 @@ export default function AdminPlansPage() {
 
   const inputStyle = { width: '100%', padding: '10px 14px', border: '1px solid var(--line)', borderRadius: 12, fontSize: 14, fontFamily: 'inherit', boxSizing: 'border-box' as const }
 
+  const ToggleRow = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
+      <span style={{ fontSize: 14, fontWeight: 600 }}>{label}</span>
+      <button
+        type="button"
+        onClick={() => onChange(!checked)}
+        style={{
+          width: 44, height: 24, borderRadius: 99, border: 'none', cursor: 'pointer',
+          background: checked ? 'var(--brand)' : '#d1d5db', position: 'relative', transition: 'background 0.2s', flexShrink: 0,
+        }}
+      >
+        <span style={{
+          position: 'absolute', top: 2, left: checked ? 22 : 2, width: 20, height: 20,
+          borderRadius: '50%', background: 'white', transition: 'left 0.2s', display: 'block',
+        }} />
+      </button>
+    </div>
+  )
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -116,38 +172,53 @@ export default function AdminPlansPage() {
         </div>
       ) : (
         <div className="bk-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
-          {plans.map((p) => (
-            <div key={p.id} style={{ background: 'white', border: `1px solid ${p.isActive ? 'var(--line)' : '#fecaca'}`, borderRadius: 20, padding: 20, opacity: p.isActive ? 1 : 0.7 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                <h3 style={{ fontWeight: 800, fontSize: 18 }}>{p.name}</h3>
-                {!p.isActive && <span style={{ fontSize: 11, color: '#b42318', background: '#fee2e2', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>Pasif</span>}
-              </div>
-              <div style={{ fontSize: 13, color: 'var(--muted-color)', marginBottom: 8 }}>Maks. {p.maxEmployees} çalışan</div>
-              <div style={{ marginBottom: 4 }}><span style={{ fontWeight: 800, fontSize: 18 }}>{formatPrice(p.monthlyPrice)}</span><span style={{ fontSize: 12, color: 'var(--muted-color)' }}>/ay</span></div>
-              <div style={{ marginBottom: 14 }}><span style={{ fontWeight: 700, fontSize: 15 }}>{formatPrice(p.yearlyPrice)}</span><span style={{ fontSize: 12, color: 'var(--muted-color)' }}>/yıl</span></div>
-              {Array.isArray(p.features) && p.features.length > 0 && (
-                <div style={{ marginBottom: 14 }}>
-                  {p.features.map((f, i) => <div key={i} style={{ fontSize: 12, color: 'var(--muted-color)', padding: '2px 0' }}>• {f}</div>)}
+          {plans.map((p) => {
+            const f = Array.isArray(p.features) ? {} : (p.features ?? {}) as PlanFeatures
+            const hasGallery = f.hasGallery !== false
+            const maxGallery = f.maxGallery ?? null
+            const canHideReviews = f.canHideReviews !== false
+            const displayList = getDisplayList(p)
+            return (
+              <div key={p.id} style={{ background: 'white', border: `1px solid ${p.isActive ? 'var(--line)' : '#fecaca'}`, borderRadius: 20, padding: 20, opacity: p.isActive ? 1 : 0.7 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                  <h3 style={{ fontWeight: 800, fontSize: 18 }}>{p.name}</h3>
+                  {!p.isActive && <span style={{ fontSize: 11, color: '#b42318', background: '#fee2e2', padding: '2px 8px', borderRadius: 99, fontWeight: 700 }}>Pasif</span>}
                 </div>
-              )}
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button onClick={() => openEdit(p)} style={{ flex: 1, height: 36, border: '1px solid var(--line)', borderRadius: 10, background: 'white', fontWeight: 600, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                  <Edit2 size={13} /> Düzenle
-                </button>
-                <button onClick={() => toggleActive(p)} style={{ flex: 1, height: 36, border: `1px solid ${p.isActive ? '#fecaca' : '#86efac'}`, borderRadius: 10, background: 'white', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: p.isActive ? '#b42318' : '#15803d' }}>
-                  {p.isActive ? 'Pasifleştir' : 'Aktifleştir'}
-                </button>
+                <div style={{ fontSize: 13, color: 'var(--muted-color)', marginBottom: 6 }}>Maks. {p.maxEmployees} çalışan</div>
+                <div style={{ marginBottom: 4 }}><span style={{ fontWeight: 800, fontSize: 18 }}>{formatPrice(p.monthlyPrice)}</span><span style={{ fontSize: 12, color: 'var(--muted-color)' }}>/ay</span></div>
+                <div style={{ marginBottom: 12 }}><span style={{ fontWeight: 700, fontSize: 15 }}>{formatPrice(p.yearlyPrice)}</span><span style={{ fontSize: 12, color: 'var(--muted-color)' }}>/yıl</span></div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                  <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 99, fontWeight: 700, background: hasGallery ? '#f0fdf4' : '#fee2e2', color: hasGallery ? '#15803d' : '#b42318' }}>
+                    {hasGallery ? (maxGallery ? `Galeri (${maxGallery})` : 'Galeri ∞') : 'Galeri yok'}
+                  </span>
+                  <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 99, fontWeight: 700, background: canHideReviews ? '#f0fdf4' : '#fee2e2', color: canHideReviews ? '#15803d' : '#b42318' }}>
+                    {canHideReviews ? 'Yorum gizleme ✓' : 'Yorum gizleme ✗'}
+                  </span>
+                </div>
+                {displayList.length > 0 && (
+                  <div style={{ marginBottom: 14 }}>
+                    {displayList.map((item, i) => <div key={i} style={{ fontSize: 12, color: 'var(--muted-color)', padding: '2px 0' }}>• {item}</div>)}
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button onClick={() => openEdit(p)} style={{ flex: 1, height: 36, border: '1px solid var(--line)', borderRadius: 10, background: 'white', fontWeight: 600, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                    <Edit2 size={13} /> Düzenle
+                  </button>
+                  <button onClick={() => toggleActive(p)} style={{ flex: 1, height: 36, border: `1px solid ${p.isActive ? '#fecaca' : '#86efac'}`, borderRadius: 10, background: 'white', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: p.isActive ? '#b42318' : '#15803d' }}>
+                    {p.isActive ? 'Pasifleştir' : 'Aktifleştir'}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }} onClick={() => setShowModal(false)}>
-          <div style={{ background: 'white', borderRadius: 20, padding: 28, maxWidth: 480, width: '100%' }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ background: 'white', borderRadius: 20, padding: 28, maxWidth: 500, width: '100%', maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <h3 style={{ fontWeight: 800, marginBottom: 20, fontSize: 18 }}>{editing ? 'Planı Düzenle' : 'Yeni Plan'}</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>Plan Adı</label>
                 <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} />
@@ -166,9 +237,33 @@ export default function AdminPlansPage() {
                   <input type="number" value={form.yearlyPrice} onChange={(e) => setForm({ ...form, yearlyPrice: e.target.value })} style={inputStyle} min="0" />
                 </div>
               </div>
+
+              <div style={{ borderTop: '1px solid var(--line)', paddingTop: 14 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 10, color: 'var(--brand)' }}>Özellik Kısıtları</div>
+                <ToggleRow label="Galeri erişimi" checked={form.hasGallery} onChange={(v) => setForm({ ...form, hasGallery: v })} />
+                {form.hasGallery && (
+                  <div style={{ padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
+                      Maks. galeri fotoğraf sayısı <span style={{ color: 'var(--muted-color)', fontWeight: 400 }}>(boş = sınırsız)</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={form.maxGallery}
+                      onChange={(e) => setForm({ ...form, maxGallery: e.target.value })}
+                      style={{ ...inputStyle, width: 160 }}
+                      min="1"
+                      placeholder="Sınırsız"
+                    />
+                  </div>
+                )}
+                <ToggleRow label="Yorum gizleme" checked={form.canHideReviews} onChange={(v) => setForm({ ...form, canHideReviews: v })} />
+              </div>
+
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>Özellikler (virgülle ayırın)</label>
-                <textarea value={form.features} onChange={(e) => setForm({ ...form, features: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Online randevu, SMS bildirimi, ..." />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>
+                  Görünür özellik listesi <span style={{ color: 'var(--muted-color)', fontWeight: 400 }}>(virgülle ayırın)</span>
+                </label>
+                <textarea value={form.displayList} onChange={(e) => setForm({ ...form, displayList: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Online randevu, SMS bildirimi, ..." />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>

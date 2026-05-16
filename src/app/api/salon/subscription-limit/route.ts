@@ -13,7 +13,28 @@ export async function GET() {
 
   if (!business) return NextResponse.json({ success: false, error: 'İşletme bulunamadı' }, { status: 404 })
 
-  const limit = business.subscription?.plan?.maxEmployees ?? null
+  const sub = business.subscription
+  const rawFeatures = sub?.plan?.features
+  const features = (Array.isArray(rawFeatures) || !rawFeatures)
+    ? {} as { hasGallery?: boolean; maxGallery?: number | null; canHideReviews?: boolean }
+    : rawFeatures as { hasGallery?: boolean; maxGallery?: number | null; canHideReviews?: boolean }
 
-  return NextResponse.json({ success: true, data: { limit } })
+  const [employeeCount, galleryCount] = await Promise.all([
+    prisma.employee.count({ where: { businessId: business.id, isActive: true } }),
+    prisma.galleryImage.count({ where: { businessId: business.id } }),
+  ])
+
+  return NextResponse.json({
+    success: true,
+    data: {
+      status: sub?.status ?? null,
+      planName: sub?.plan?.name ?? null,
+      maxEmployees: sub?.plan?.maxEmployees ?? null,
+      currentEmployeeCount: employeeCount,
+      hasGallery: features.hasGallery !== false,
+      maxGallery: features.maxGallery ?? null,
+      currentGalleryCount: galleryCount,
+      canHideReviews: features.canHideReviews !== false,
+    },
+  })
 }
