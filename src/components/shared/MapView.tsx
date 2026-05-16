@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Business {
   id: string
@@ -154,6 +154,7 @@ export default function MapView({ businesses, city, userLocation, activeId, onSe
   const LRef = useRef<LeafletMap>(null)
   const markersRef = useRef<LeafletMap[]>([])
   const userMarkerRef = useRef<LeafletMap>(null)
+  const [mapReady, setMapReady] = useState(false)
 
   // Initialize map once
   useEffect(() => {
@@ -198,6 +199,9 @@ export default function MapView({ businesses, city, userLocation, activeId, onSe
       L.control.zoom({ position: 'bottomright' }).addTo(map)
 
       map.setView(center, zoom)
+
+      // Signal that the map is ready so the markers effect re-runs
+      if (mounted) setMapReady(true)
     }
 
     init().catch(console.error)
@@ -220,9 +224,9 @@ export default function MapView({ businesses, city, userLocation, activeId, onSe
     mapInstanceRef.current.setView(center, zoom, { animate: true, duration: 0.8 })
   }, [city])
 
-  // Update markers when businesses or activeId changes
+  // Update markers when businesses or activeId changes (mapReady ensures map is initialized first)
   useEffect(() => {
-    if (!mapInstanceRef.current || !LRef.current) return
+    if (!mapReady || !mapInstanceRef.current || !LRef.current) return
     const L = LRef.current
     const map = mapInstanceRef.current
 
@@ -247,11 +251,11 @@ export default function MapView({ businesses, city, userLocation, activeId, onSe
 
       markersRef.current.push(marker)
     })
-  }, [businesses, activeId, userLocation, onSelect])
+  }, [businesses, activeId, userLocation, onSelect, mapReady])
 
   // Update user location marker
   useEffect(() => {
-    if (!mapInstanceRef.current || !LRef.current) return
+    if (!mapReady || !mapInstanceRef.current || !LRef.current) return
     const L = LRef.current
     const map = mapInstanceRef.current
 
@@ -270,7 +274,7 @@ export default function MapView({ businesses, city, userLocation, activeId, onSe
       m.bindPopup('<div style="font-family:Inter,sans-serif;font-weight:700;font-size:13px;color:#2563eb">📍 Konumunuz</div>', { maxWidth: 160 })
       userMarkerRef.current = m
     }
-  }, [userLocation])
+  }, [userLocation, mapReady])
 
   return (
     <>
